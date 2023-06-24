@@ -1,4 +1,5 @@
 const express = require('express')
+const cors = require('cors')
 const { Pool } = require('pg')
 // Load privacy-sensitive information from .env file
 require('dotenv').config()
@@ -17,6 +18,7 @@ const pool = new Pool({
 })
 
 const app = express()
+app.use(cors())
 // Define GET request to pull user account data from postgreSQL table
 app.get('/user_accounts', async (req, res) => {
   try {
