@@ -1,11 +1,17 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-import { Navbar, Nav, Form, FormControl, Button } from 'react-bootstrap';
+import React, { useState } from 'react'
+import { Link } from 'react-router-dom'
+import { Navbar, Nav, Form, FormControl, Button } from 'react-bootstrap'
 
-const Navigation = () => {
+const Navigation = ({filterDataByCategory, setSearchText}) => {
+
+  const handleSearchChange = (event) => {
+    const searchText = event.target.value
+    filterDataByCategory('', searchText)
+  }
+
   return (
     <Navbar bg="dark" variant="dark" expand="lg">
-      <Navbar.Brand as={Link} to="/" className="mr-5">Compete.</Navbar.Brand>
+      <Navbar.Brand as={Link} to="/" className="ml-5">Compete.</Navbar.Brand>
       <Navbar.Toggle aria-controls="basic-navbar-nav" />
       <Navbar.Collapse id="basic-navbar-nav">
         <Nav className="mr-auto">
@@ -28,8 +34,7 @@ const Navigation = () => {
           </Nav.Item>
           <Form inline="true">
             <div className="d-flex">
-              <FormControl type="text" placeholder="Search" className="mr-sm-2" />
-              <Button variant="outline-light">Search</Button>
+              <FormControl type="text" placeholder="Search" className="mr-sm-2" onChange={handleSearchChange}/>
             </div>
           </Form>
         </Nav>
@@ -38,4 +43,4 @@ const Navigation = () => {
   );
 }
 
-export default Navigation;
+export default Navigation

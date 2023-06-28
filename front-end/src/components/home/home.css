@@ -1,45 +1,136 @@
 .container {
-  background-color: #ffffff;
-  padding: 20px;
-  display: flex;
-  align-items: flex-start;
-  height: 100vh;
+  display: grid;
+  grid-template-columns: 1fr 3fr;
+  grid-template-rows: auto 1fr auto; /* Added the extra row for the footer */
+  min-height: 100vh;
+  gap: 20px;
 }
 
 .sidebar {
-  background-color: #e1f0ff;
+  grid-column: 1;
+  grid-row: 1 / span 3;
+  background-color: #F5F5F5;
   padding: 20px;
-  width: 25%;
-  margin-right: 20px;
   border-radius: 5px;
+  margin-top: 20px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.category-list {
-  list-style-type: none;
-  padding: 0;
-  margin: 0;
-}
-
-.category-item {
-  cursor: pointer;
-  transition: opacity 0.3s ease;
-}
-
-.category-item:hover {
-  opacity: 0.7;
 }
 
 .event-container {
-  flex-grow: 1;
   display: flex;
-  flex-direction: column;
+  flex-wrap: wrap;
+  justify-content: space-between;
 }
 
 .event-card {
-  background-color: #e1f0ff;
-  padding: 20px;
-  margin-bottom: 20px;
+  flex: 0 0 calc(33.33% - 20px);
+  background-color: #F5F5F5;
+  padding: 15px;
   border-radius: 5px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: 3px 5px 5px rgba(0, 0, 0, 0.1);
+  max-width: 300px;
+  margin-bottom: 25px;
+}
+
+.event-card .event-image {
+  width: 100%;
+  height: 150px;
+  object-fit: cover;
+  border-radius: 5px;
+  margin-bottom: 10px;
+}
+
+.event-card .event-content {
+  padding: 15px;
+  border-top: 1px solid #F5F5F5;
+  margin-top: 10px;
+}
+
+.event-card h3 {
+  font-size: 18px;
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+.event-card p {
+  font-size: 14px;
+  margin-bottom: 8px;
+}
+
+.event-info {
+  font-size: 12px;
+  color: #555555;
+}
+
+.footer {
+  grid-column: 1 / span 2;
+  background-color: rgba(245, 245, 245, 0.8);
+  padding: 20px;
+}
+
+/* Additional CSS to add space between second and third cards in each row */
+/* .event-card:nth-child(3n+2) {
+  margin-right: 20px;
+} */
+
+.footer-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.footer-left {
+  display: flex;
+  align-items: center;
+}
+
+.website-name {
+  font-size: 24px;
+  font-weight: bold;
+  margin-right: 20px;
+}
+
+.footer-links {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+}
+
+.footer-links li {
+  margin-right: 10px;
+}
+
+.footer-links li a {
+  color: #000;
+  text-decoration: none;
+}
+
+.footer-right {
+  display: flex;
+  align-items: center;
+}
+
+.newsletter-form {
+  display: flex;
+}
+
+.newsletter-form input {
+  padding: 5px;
+  border-radius: 3px;
+  border: 1px solid #ccc;
+  margin-right: 10px;
+}
+
+.newsletter-form button {
+  padding: 5px 10px;
+  border: none;
+  border-radius: 3px;
+  background-color: #007bff;
+  color: #fff;
+  cursor: pointer;
+}
+
+.newsletter-form button:hover {
+  background-color: #0056b3;
 }
