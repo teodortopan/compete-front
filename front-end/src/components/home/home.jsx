@@ -60,14 +60,14 @@ const Home = ({ filterDataByCategory, filteredData }) => {
       </div>
       <div className="content">
         
-          {filteredData.map((item, index) => (
+          {filteredData.map((item) => (
             <div key={item.post_id} className="event-card">
               <img className="event-image" src={item.images} alt="Event" />
-              <h3>{item.title}</h3>
+              <h3 className='event-title'>{item.title}</h3>
               <div className="event-info">
                 <p>Date & Time: {item.date.substring(0, 10) + ' @ ' + item.event_time}</p>
-                <p>Location: {item.location}</p>
-                <p>Organizer: {item.organizer}</p>
+                <p className={`event-attribute ${item.location.length > 25 ? 'event-description' : ''}`}>Location: {item.location}</p>
+                <p className={`event-attribute ${item.organizer.length > 25 ? 'event-description' : ''}`}>Organizer: {item.organizer}</p>
                 <p>Price: ${item.price}</p>
               </div>
             </div>
