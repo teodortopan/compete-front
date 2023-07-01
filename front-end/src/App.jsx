@@ -6,12 +6,26 @@ import Services from './components/services'
 import About from './components/about'
 import Contact from './components/contact'
 import Navigation from './components/navigation'
-import Signup from './components/signup'
+import SignUp from './components/login/signup'
 import Login from './components/login/login'
-function App() {
+const App = () => {
   const [data, setData] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState('');
   const [searchText, setSearchText] = useState('')
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  useEffect(() => {
+    // Check if the user is authenticated
+    const token = localStorage.getItem('token'); // Get the session token or JWT from local storage
+  
+    if (token) {
+      // User is authenticated
+      setIsAuthenticated(true);
+    } else {
+      // User is not authenticated
+      setIsAuthenticated(false);
+    }
+  }, []);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -50,7 +64,7 @@ function App() {
         <Route path='/services' Component={Services} />
         <Route path='/about' Component={About} />
         <Route path='/contact' Component={Contact} />
-        <Route path='/signup' Component={Signup} />
+        <Route path='/signup' Component={SignUp} />
         <Route path='/login' Component={Login} />
       </Routes>
     </>

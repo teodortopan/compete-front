@@ -27,9 +27,6 @@ const Navigation = ({filterDataByCategory, setSearchText}) => {
         </Nav>
         <Nav className="ml-5">
           <Nav.Item>
-            <Nav.Link as={Link} to="/signup" className="nav-link">Sign Up</Nav.Link>
-          </Nav.Item>
-          <Nav.Item>
             <Nav.Link as={Link} to="/login" className="nav-link">Log In</Nav.Link>
           </Nav.Item>
           <Form inline="true">
