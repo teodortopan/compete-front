@@ -1,6 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const { Pool } = require('pg');
+const jwt = require('jsonwebtoken');
 // Load privacy-sensitive information from .env file
 require('dotenv').config();
 const dbUser = process.env.PSQL_USER;
@@ -61,13 +62,16 @@ app.post('/login', async (req, res) => {
     const query = 'SELECT * FROM user_accounts WHERE LOWER(username) = $1 OR LOWER(email) = $1';
     const result = await pool.query(query, [usernameOrEmailLower]);
 
-    // Check if the user account exists and the password matches
-    if (result.rows.length === 1 && result.rows[0].password === password) {
-      // Login successful
-      res.sendStatus(200);
+    if (result.rows.length === 1) {
+      const user = result.rows[0];
+      if (user.password === password) {
+        const token = jwt.sign({ username: user.username }, 'secretKey');
+        res.json({ token, username: user.username });
+      } else {
+        res.sendStatus(401); // Invalid password
+      }
     } else {
-      // Invalid username/email or password
-      res.sendStatus(401);
+      res.sendStatus(401); // Invalid username/email
     }
   } catch (error) {
     console.error('Error logging in:', error);
@@ -96,6 +100,19 @@ app.get('/competitions', async (req, res) => {
     res.status(500).json({ error: 'Internal Server Error' });
   }
 })
+
+app.get('/username', async (req, res) => {
+  try {
+    const email = req.query.email; // Access email from query parameters
+    const lowerEmail = email.toLowerCase();
+    // Select the username from the user_accounts table based on the email
+    const result = await pool.query('SELECT username FROM user_accounts WHERE LOWER(email) = $1', [lowerEmail]);
+    res.json(result.rows);
+  } catch (error) {
+    console.error('Error executing query:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
 
 // Define POST request to post user account data to postgreSQL table
 app.post('/post_competitions', async (req, res) => {

@@ -3,7 +3,7 @@ import './login.css';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
-const Login = () => {
+const Login = ({handleLogin, setEmail, getUsername}) => {
   const navigate = useNavigate();
   const [usernameOrEmail, setUsernameOrEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -19,7 +19,15 @@ const Login = () => {
         password,
       });
 
+      
       if (response.status === 200) {
+        localStorage.setItem('token', response.data.token)
+        localStorage.setItem('username', response.data.username);
+        console.log('Token:', response.data.token);
+        console.log('Username:', response.data.username);
+        setEmail(usernameOrEmail)
+
+        handleLogin()
         // Login successful
         console.log('Login successful!');
         // Clear form fields
@@ -42,7 +50,7 @@ const Login = () => {
       <form className="login-form" onSubmit={handleSubmit}>
         <h2>Login</h2>
         <div className={`form-group ${error && 'error'}`}>
-          <label htmlFor="usernameOrEmail">Username or Email</label>
+          <label htmlFor="usernameOrEmail">Email</label>
           <input
             type="text"
             id="usernameOrEmail"
