@@ -3,7 +3,7 @@ import './login.css';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
-const Login = ({handleLogin, setEmail, getUsername}) => {
+const Login = ({handleLogin, setEmail}) => {
   const navigate = useNavigate();
   const [usernameOrEmail, setUsernameOrEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -21,6 +21,7 @@ const Login = ({handleLogin, setEmail, getUsername}) => {
 
       
       if (response.status === 200) {
+        console.log(response.data)
         localStorage.setItem('token', response.data.token)
         localStorage.setItem('username', response.data.username);
         console.log('Token:', response.data.token);

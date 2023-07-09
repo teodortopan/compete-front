@@ -2,6 +2,8 @@ const express = require('express');
 const cors = require('cors');
 const { Pool } = require('pg');
 const jwt = require('jsonwebtoken');
+const fileUpload = require('express-fileupload');
+const multer = require('multer');
 // Load privacy-sensitive information from .env file
 require('dotenv').config();
 const dbUser = process.env.PSQL_USER;
@@ -18,9 +20,12 @@ const pool = new Pool({
   port: dbPort,
 });
 
+const storage = multer.memoryStorage(); // Use memory storage to store the file in memory
+const upload = multer({ storage }).single('profile-picture'); 
 const app = express();
 app.use(cors());
 app.use(express.json());
+app.use(upload);
 
 // Define POST request to post user account data to postgreSQL table
 app.post('/post_user', async (req, res) => {
@@ -66,7 +71,7 @@ app.post('/login', async (req, res) => {
       const user = result.rows[0];
       if (user.password === password) {
         const token = jwt.sign({ username: user.username }, 'secretKey');
-        res.json({ token, username: user.username });
+        res.json({ token, username: user.username, user_id: user.user_id }); // Include user_id in the response
       } else {
         res.sendStatus(401); // Invalid password
       }
@@ -89,6 +94,82 @@ app.get('/user_accounts', async (req, res) => {
     res.status(500).json({ error: 'Internal Server Error' });
   }
 })
+
+app.get('/user/:username', async (req, res) => {
+  try {
+    const username = req.params.username; // Access the user ID from the URL parameter
+    // Query the database to retrieve user data based on the user ID
+    const lowerUsername = username.toLowerCase()
+    const result = await pool.query('SELECT * FROM user_accounts WHERE LOWER(username) = $1', [lowerUsername]);
+    
+    if (result.rows.length === 1) {
+      const user = result.rows[0];
+      // Return the user data as the response
+      res.json(user);
+    } else {
+      // User not found
+      res.sendStatus(404);
+    }
+  } catch (error) {
+    console.error('Error retrieving user:', error);
+    res.sendStatus(500);
+  }
+});
+
+app.get('/event/:competition/:id', async (req, res) => {
+  try {
+    const competition = req.params.competition; 
+    const eventId = req.params.id
+    // Query the database to retrieve user data based on the user ID
+    const lowerCompetition = competition.toLowerCase()
+    const result = await pool.query('SELECT * FROM competitions WHERE post_id = $1', [eventId]);
+    
+    if (result.rows.length === 1) {
+      const user = result.rows[0];
+      // Return the user data as the response
+      res.json(user);
+    } else {
+      // User not found
+      res.sendStatus(404);
+    }
+  } catch (error) {
+    console.error('Error retrieving user:', error);
+    res.sendStatus(500);
+  }
+});
+
+// app.post('/user/:username/profile-picture', upload, async(req, res) => {
+//   upload(req, res, async (err) => {
+//     if (err) {
+//       console.error('Error uploading file:', err);
+//       return res.sendStatus(500);
+//     }
+
+//     try {
+//       const username = req.params.username;
+//       const file = req.file.buffer; // Access the uploaded file using req.file
+//       console.log('req.file:', req.file);
+//       console.log('file:', file);
+
+//       // Query the database to update the profile picture of the user with matching username
+//       const lowerUsername = username.toLowerCase();
+//       const result = await pool.query('UPDATE user_accounts SET profile_picture = $1 WHERE LOWER(username) = $2 RETURNING *', [file, lowerUsername]);
+
+//       if (result.rows.length === 1) {
+//         const user = result.rows[0];
+//         user.profile_picture = file
+//         // Return the updated user data as the response
+//         res.json(user);
+//       } else {
+//         // User not found
+//         res.sendStatus(404);
+//       }
+//     } catch (error) {
+//       console.error('Error updating profile picture:', error);
+//       res.sendStatus(500);
+//     }
+//   });
+// });
 
 app.get('/competitions', async (req, res) => {
   try {

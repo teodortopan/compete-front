@@ -14,6 +14,13 @@ const Navigation = ({ filterDataByCategory, setSearchText, isAuthenticated, user
     filterDataByCategory('', searchText);
   };
 
+  const handleKeyDown = (event) => {
+    if (event.key === 'Enter') {
+      event.preventDefault(); // Prevent default behavior
+      // You can perform additional actions here if needed
+    }
+  };
+
   return (
     <Navbar bg="dark" variant="dark" expand="lg">
       <Navbar.Brand as={Link} to="/" style={{ marginLeft: '1rem' }}>
@@ -44,18 +51,13 @@ const Navigation = ({ filterDataByCategory, setSearchText, isAuthenticated, user
             placeholder="Search"
             className="mr-sm-2"
             onChange={handleSearchChange}
+            onKeyDown={handleKeyDown}
           />
         </Form>
         <Nav style={{ marginLeft: '40rem' }}>
-          {isLoading ? (
+          {isAuthenticated ? (
             <Nav.Item>
-              <Nav.Link as={Link} to="/login" className="nav-link">
-                Loading...
-              </Nav.Link>
-            </Nav.Item>
-          ) : isAuthenticated ? (
-            <Nav.Item>
-              <Nav.Link as={Link} to="/login" className="nav-link">
+              <Nav.Link as={Link} to={`/user/${username}`} className="nav-link">
                 Currently logged in as {username}
               </Nav.Link>
             </Nav.Item>

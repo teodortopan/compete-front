@@ -1,7 +1,18 @@
 import React from 'react'
 import './home.css';
-
-const Home = ({ filterDataByCategory, filteredData }) => {
+import Footer from '../footer/footer';
+import { useNavigate } from 'react-router-dom';
+const Home = ({ filterDataByCategory, filteredData, onEventId, onEventTitle }) => {
+  const navigate = useNavigate();
+  const handleEventClick = (id, title) => {
+    localStorage.setItem('eventTitle', title)
+    localStorage.setItem('eventId', id)
+    onEventId(id)
+    onEventTitle(title)
+    console.log(id)
+    console.log(title)
+    navigate(`/event/${title}/${id}`)
+  }
 
   return (
     <div className="container">
@@ -61,7 +72,7 @@ const Home = ({ filterDataByCategory, filteredData }) => {
       <div className="content">
         
           {filteredData.map((item) => (
-            <div key={item.post_id} className="event-card">
+            <div key={item.post_id} className="event-card" onClick={() => handleEventClick(item.post_id, item.title)}>
               <img className="event-image" src={item.images} alt="Event" />
               <h3 className='event-title'>{item.title}</h3>
               <div className="event-info">
@@ -74,7 +85,7 @@ const Home = ({ filterDataByCategory, filteredData }) => {
           ))}
       
       </div>
-      <footer className="footer">
+      {/* <footer className="footer">
         <div className="footer-content">
           <div className="footer-left">
             <h1 className="website-name">Compete.</h1>
@@ -97,7 +108,7 @@ const Home = ({ filterDataByCategory, filteredData }) => {
             </form>
           </div>
         </div>
-      </footer>
+      </footer> */}
     </div>
   );
 };
