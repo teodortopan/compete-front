@@ -11,6 +11,7 @@ import Login from './components/login/login';
 import Profile from './components/profile/profile';
 import Footer from './components/footer/footer';
 import Event from './components/event/event'
+import Creator from './components/creator/creator';
 
 const App = () => {
   const [data, setData] = useState([]);
@@ -112,6 +113,8 @@ const App = () => {
         <Route path='/about' element={<About />} />
         <Route path='/contact' element={<Contact />} />
         <Route path='/signup' element={<SignUp />} />
+        <Route path='/login' element={<Login />} />
+        <Route path='/creator' element={<Creator />} />
         <Route path='/user/:username'element={<Profile username={username}/>} />
         <Route path='/event/:competition/:id'element={<Event eventId={eventId} eventTitle = {eventTitle}/>} />
         <Route

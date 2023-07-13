@@ -1,0 +1,98 @@
+.container-creator {
+  background-color: #f2f2f2;
+  padding: 6px; /* Adjusted padding */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.creator-form {
+  background-color: #ffffff;
+  padding: 20px; /* Adjusted padding */
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  max-width: 1700px; /* Updated max-width */
+  width: 100%;
+  margin: 0 auto; /* Center the form horizontally */
+}
+
+.creator-form h2 {
+  font-size: 16px; /* Adjusted font-size */
+  margin-bottom: 10px; /* Adjusted margin */
+  text-align: center;
+  color: #333333;
+}
+
+.form-group {
+  margin-bottom: 10px; /* Adjusted margin */
+}
+
+.form-group label {
+  display: block;
+  font-size: 14px;
+  font-weight: bold;
+  margin-bottom: 4px; /* Adjusted margin */
+  color: #666666;
+}
+
+.form-group input,
+.form-group textarea,
+.form-group select {
+  width: 100%;
+  padding: 4px; /* Adjusted padding */
+  border: 1px solid #dddddd;
+  border-radius: 3px;
+  font-size: 14px;
+  color: #333333;
+  transition: border-color 0.3s ease, transform 0.3s ease;
+}
+
+.creator-category-container {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.creator-category-item {
+  display: inline-flex;
+  align-items: center;
+  background-color: #f2f2f2;
+  padding: 2px 6px; /* Adjusted padding */
+  border-radius: 20px;
+  margin-right: 6px; /* Adjusted margin */
+  margin-bottom: 6px; /* Adjusted margin */
+  font-size: 12px;
+}
+
+.remove-creator-category {
+  cursor: pointer;
+  font-size: 8px; /* Adjusted font-size */
+  color: #333333;
+  margin-left: 2px; /* Adjusted margin */
+}
+
+.creator-button {
+  background-color: #333333;
+  color: white;
+  padding-top: 7px;
+  padding-bottom: 7px;
+  padding-right: 13px;
+  padding-left: 13px;
+  border: none;
+  border-radius: 15px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: box-shadow 0.2s, opacity 0.15s;
+  margin-right: 40px;
+  vertical-align: top;
+}
+
+.creator-button:hover {
+  background-color: #555555;
+  transition: 0.2s;
+}
+
+.error-message {
+  color: red;
+}

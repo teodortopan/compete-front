@@ -5,13 +5,21 @@ import { useNavigate } from 'react-router-dom';
 const Home = ({ filterDataByCategory, filteredData, onEventId, onEventTitle }) => {
   const navigate = useNavigate();
   const handleEventClick = (id, title) => {
-    localStorage.setItem('eventTitle', title)
-    localStorage.setItem('eventId', id)
-    onEventId(id)
-    onEventTitle(title)
-    console.log(id)
-    console.log(title)
-    navigate(`/event/${title}/${id}`)
+    const token = localStorage.getItem('token');
+
+    if(token) {
+      localStorage.setItem('eventTitle', title)
+      localStorage.setItem('eventId', id)
+      onEventId(id)
+      onEventTitle(title)
+      console.log(id)
+      console.log(title)
+      navigate(`/event/${title}/${id}`)
+    }
+    else {
+      navigate('/login')
+    }
+
   }
 
   return (
@@ -63,9 +71,6 @@ const Home = ({ filterDataByCategory, filteredData, onEventId, onEventTitle }) =
           </li>
           <li onClick={() => filterDataByCategory('Trivia')} className="category-item">
             Trivia
-          </li>
-          <li onClick={() => filterDataByCategory('Literary Studies')} className="category-item">
-            Literary Studies
           </li>
         </ul>
       </div>

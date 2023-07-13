@@ -198,10 +198,10 @@ app.get('/username', async (req, res) => {
 // Define POST request to post user account data to postgreSQL table
 app.post('/post_competitions', async (req, res) => {
   try {
-    const { name, email, password } = req.body;
+    const { title, description, organizer, location, time, date, images, categories, price } = req.body;
     // Insert data into the users table
-    const query = 'INSERT INTO competitions (username, email, password) VALUES ($1, $2, $3)';
-    await pool.query(query, [name, email, password]);
+    const query = 'INSERT INTO competitions (title, description, organizer, location, event_time, date, images, category, price) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)';
+    await pool.query(query, [title, description, organizer, location, time, date, images, categories, price]);
 
     res.sendStatus(200) // Send a success response
   } catch (err) {

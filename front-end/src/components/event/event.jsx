@@ -48,7 +48,7 @@ const Event = ({ eventId, eventTitle }) => {
         <p className="individual-location">Location: {location}</p>
         <p className="individual-time">Event Time: {event_time}</p>
         <p className="individual-date">Date: {date}</p>
-        <p className="individual-price">Price: {price}</p>
+        <p className="individual-price">Price: {price}$</p>
         <button className="individual-button" onClick={handleParticipate}>
           Participate
         </button>

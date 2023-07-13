@@ -54,13 +54,20 @@ const Navigation = ({ filterDataByCategory, setSearchText, isAuthenticated, user
             onKeyDown={handleKeyDown}
           />
         </Form>
-        <Nav style={{ marginLeft: '40rem' }}>
+        <Nav style={{ marginLeft: '40rem', display: 'flex', alignItems: 'center'}}>
           {isAuthenticated ? (
-            <Nav.Item>
-              <Nav.Link as={Link} to={`/user/${username}`} className="nav-link">
-                Currently logged in as {username}
+            <>
+            <Nav.Item style={{marginRight: '10px'}}>
+              <Nav.Link as={Link} to="/creator" className="nav-link">
+                Create Event
               </Nav.Link>
             </Nav.Item>
+            <Nav.Item style={{marginRight: '10px'}}>
+              <Nav.Link as={Link} to={`/user/${username}`} className="nav-link">
+                Currently logged in as: {username}
+              </Nav.Link>
+            </Nav.Item>
+            </>
           ) : (
             <Nav.Item>
               <Nav.Link as={Link} to="/login" className="nav-link">
