@@ -14,6 +14,7 @@ const Creator = () => {
   const [categories, setCategories] = useState([]);
   const [price, setPrice] = useState('');
   const [error, setError] = useState('');
+  const [showPopup, setShowPopup] = useState(false);
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
@@ -64,6 +65,46 @@ const Creator = () => {
     }
   };
 
+  const handleEventCreation = () => {
+    if (
+      title !== '' &&
+      description !== '' &&
+      organizer !== '' &&
+      location !== '' &&
+      date !== '' &&
+      time !== '' &&
+      images !== '' &&
+      categories.length > 0 &&
+      price !== ''
+    ) {
+      setShowPopup(true);
+    } else {
+      // Show required field error
+      setError('Please fill out all required fields');
+    }
+  };
+  const handleConfirm = () => {
+    handleSubmit()
+    setShowPopup(false);
+  };
+
+  const handleCancel = () => {
+    setShowPopup(false);
+  };
+
+  const handleImageChange = (e) => {
+    if (e.target.files && e.target.files.length > 0) {
+      const file = e.target.files[0];
+      const reader = new FileReader();
+      reader.onload = () => {
+        setImages(reader.result);
+      };
+      reader.readAsDataURL(file); // Read the file as a data URL
+    } else {
+      setImageUrl('');
+    }
+  }
+
   return (
     <div className="container-creator">
       <form className="creator-form" onSubmit={handleSubmit}>
@@ -85,7 +126,6 @@ const Creator = () => {
             id="description"
             value={description}
             onChange={(e) => setDescription(e.target.value)}
-            required
           ></textarea>
         </div>
         <div className={`form-group ${error ? 'error' : ''}`}>
@@ -131,10 +171,10 @@ const Creator = () => {
         <div className={`form-group ${error ? 'error' : ''}`}>
           <label htmlFor="images">Images</label>
           <input
-            type="text"
+            type="file"
             id="images"
-            value={images}
-            onChange={(e) => setImages(e.target.value)}
+            value={images.URL}
+            onChange={(e) => handleImageChange(e)}
             required
           />
         </div>
@@ -279,11 +319,28 @@ const Creator = () => {
             required
           />
         </div>
-        <button type="submit" className="creator-button">
+        <button type="submit" className="creator-button" onClick={handleEventCreation}>
           Create Event
         </button>
       </form>
+      {showPopup && (
+        <div className="popup">
+          <div className="popup-content">
+            <h2 className="popup-title">Confirmation</h2>
+            <p className="popup-message">Are you sure you want to create this event?</p>
+            <div className="popup-buttons">
+              <button className="popup-button" onClick={handleConfirm}>
+                Yes
+              </button>
+              <button className="popup-button" onClick={handleCancel}>
+                No
+              </button>
+            </div>
+          </div>
+        </div>
+          )}
     </div>
+
   );
 };
 

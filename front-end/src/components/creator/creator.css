@@ -85,6 +85,7 @@
   cursor: pointer;
   transition: box-shadow 0.2s, opacity 0.15s;
   margin-right: 40px;
+  margin-top: 20px;
   vertical-align: top;
 }
 
