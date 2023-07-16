@@ -3,10 +3,10 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import './creator.css';
 
-const Creator = () => {
+const Creator = ({username, user_id}) => {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
-  const [organizer, setOrganizer] = useState('');
+  const [organizer, setOrganizer] = useState(username);
   const [location, setLocation] = useState('');
   const [time, setTime] = useState('');
   const [images, setImages] = useState('');
@@ -23,6 +23,7 @@ const Creator = () => {
 
     try {
       const response = await axios.post('http://localhost:3000/post_competitions', {
+        user_id,
         title,
         description,
         organizer,
@@ -135,7 +136,8 @@ const Creator = () => {
             id="organizer"
             value={organizer}
             onChange={(e) => setOrganizer(e.target.value)}
-            required
+            disabled
+            placeholder={username}
           />
         </div>
         <div className={`form-group ${error ? 'error' : ''}`}>

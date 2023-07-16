@@ -3,7 +3,7 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import './profile.css';
 
-const Profile = ({ username }) => {
+const Profile = ({ username, setUserId }) => {
   const navigate = useNavigate();
   const [userData, setUserData] = useState(null);
   // const [isHovered, setIsHovered] = useState(false);
@@ -13,6 +13,8 @@ const Profile = ({ username }) => {
       try {
         const response = await axios.get(`http://localhost:3000/user/${username}`);
         setUserData(response.data);
+        localStorage.setItem('userId', response.data.user_id)
+        console.log(response.data.user_id)
       } catch (error) {
         console.error('Error fetching user data:', error);
       }

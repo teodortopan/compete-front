@@ -35,7 +35,9 @@ const Login = ({handleLogin, setEmail}) => {
         setUsernameOrEmail('');
         setPassword('');
 
-        navigate('/');
+        navigate(`/`);
+
+        window.location.reload()
       } else {
         // Invalid username/email or password
         setError('Invalid username/email or password.');

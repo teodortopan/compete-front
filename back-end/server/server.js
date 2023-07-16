@@ -138,6 +138,27 @@ app.get('/event/:competition/:id', async (req, res) => {
   }
 });
 
+app.post('/event/:competition/:id/delete', async (req, res) => {
+  try {
+    const competition = req.params.competition; 
+    const eventId = req.params.id;
+    // Query the database to retrieve user data based on the user ID
+    const lowerCompetition = competition.toLowerCase();
+    const result = await pool.query('DELETE FROM competitions WHERE post_id = $1', [eventId]);
+
+    if (result.rowCount === 1) {
+      // Deletion successful
+      res.sendStatus(200);
+    } else {
+      // Event not found or not deleted successfully
+      res.sendStatus(404);
+    }
+  } catch (error) {
+    console.error('Error deleting event:', error);
+    res.sendStatus(500);
+  }
+});
+
 // app.post('/user/:username/profile-picture', upload, async(req, res) => {
 //   upload(req, res, async (err) => {
 //     if (err) {
@@ -198,10 +219,10 @@ app.get('/username', async (req, res) => {
 // Define POST request to post user account data to postgreSQL table
 app.post('/post_competitions', async (req, res) => {
   try {
-    const { title, description, organizer, location, time, date, images, categories, price } = req.body;
+    const { user_id, title, description, organizer, location, time, date, images, categories, price } = req.body;
     // Insert data into the users table
-    const query = 'INSERT INTO competitions (title, description, organizer, location, event_time, date, images, category, price) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)';
-    await pool.query(query, [title, description, organizer, location, time, date, images, categories, price]);
+    const query = 'INSERT INTO competitions (user_id, title, description, organizer, location, event_time, date, images, category, price) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)';
+    await pool.query(query, [user_id, title, description, organizer, location, time, date, images, categories, price]);
 
     res.sendStatus(200) // Send a success response
   } catch (err) {
