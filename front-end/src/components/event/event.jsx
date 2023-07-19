@@ -3,7 +3,7 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import './event.css';
 
-const Event = ({ eventId, eventTitle, userId }) => {
+const Event = ({ eventId, eventTitle, userId, name, phoneNumber }) => {
   const navigate = useNavigate();
   const [eventData, setEventData] = useState('');
   const [showPopup, setShowPopup] = useState(false);
@@ -30,9 +30,15 @@ const Event = ({ eventId, eventTitle, userId }) => {
     setShowPopup(true);
   };
 
-  const handleConfirm = () => {
-    // Perform the participation action here
+  const handleConfirm = async () => {
+    const response = await axios.post(`http://localhost:3000/participate/${eventId}`, {
+      name: name,
+      phoneNumber: phoneNumber,
+    })
+    console.log(response.data)
     setShowPopup(false);
+    navigate('/')
+    window.location.reload()
   };
 
   const handleCancel = () => {
@@ -56,7 +62,7 @@ const Event = ({ eventId, eventTitle, userId }) => {
         <p className="individual-location">Location: {location}</p>
         <p className="individual-time">Event Time: {event_time}</p>
         <p className="individual-date">Date: {date.substring(0, 10)}</p>
-        <p className="individual-price">Price: {price}$</p>
+        <p className="individual-price">Participation fee: {price}$</p>
         <button className="individual-delete-button" onClick={handlePopup}>
           Delete Event
         </button>

@@ -231,6 +231,24 @@ app.post('/post_competitions', async (req, res) => {
   }
 })
 
+app.post('/participate/:id', async (req, res) => {
+  try {
+    const id = req.params.id
+    const { name, phoneNumber } = req.body; // Assuming your request contains name and phoneNumber
+
+    // Query to update the 'participants' column in the 'competitions' table
+    const updateQuery = `UPDATE competitions SET participants = array_append(participants, $1) WHERE post_id = $2;`;
+
+    // Execute the query using the pool
+    await pool.query(updateQuery, [[name, phoneNumber], id]);
+
+    res.status(200).json({ message: 'Successfully updated participants' });
+  } catch (err) {
+    console.error('Error executing query', err);
+    res.status(500).json({ error: 'Server error' });
+  }
+});
+
 const port = 3000
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);

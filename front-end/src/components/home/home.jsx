@@ -1,9 +1,12 @@
-import React from 'react'
+import React, { useState } from 'react'
 import './home.css';
 import Footer from '../footer/footer';
 import { useNavigate } from 'react-router-dom';
+
 const Home = ({ filterDataByCategory, filteredData, onEventId, onEventTitle }) => {
   const navigate = useNavigate();
+  const [currentPage, setCurrentPage] = useState(1);
+  const eventsPerPage = 9;
   const handleEventClick = (id, title) => {
     const token = localStorage.getItem('token');
 
@@ -21,6 +24,17 @@ const Home = ({ filterDataByCategory, filteredData, onEventId, onEventTitle }) =
     }
 
   }
+
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+  };
+
+  const indexOfLastEvent = currentPage * eventsPerPage;
+  const indexOfFirstEvent = indexOfLastEvent - eventsPerPage;
+  const currentEvents = filteredData.slice(indexOfFirstEvent, indexOfLastEvent);
+
+  const totalEvents = filteredData.length;
+  const totalPages = Math.ceil(totalEvents / eventsPerPage);
 
   return (
     <div className="container">
@@ -76,7 +90,7 @@ const Home = ({ filterDataByCategory, filteredData, onEventId, onEventTitle }) =
       </div>
       <div className="content">
         
-          {filteredData.map((item) => (
+          {currentEvents.map((item) => (
             <div key={item.post_id} className="event-card" onClick={() => handleEventClick(item.post_id, item.title)}>
               <img className="event-image" src={item.images} alt="Event" />
               <h3 className='event-title'>{item.title}</h3>
@@ -84,38 +98,34 @@ const Home = ({ filterDataByCategory, filteredData, onEventId, onEventTitle }) =
                 <p>Date & Time: {item.date.substring(0, 10) + ' @ ' + item.event_time}</p>
                 <p className={`event-attribute ${item.location.length > 25 ? 'event-description' : ''}`}>Location: {item.location}</p>
                 <p className={`event-attribute ${item.organizer.length > 25 ? 'event-description' : ''}`}>Organizer: {item.organizer}</p>
-                <p>Price: ${item.price}</p>
+                <p>Participation fee: ${item.price}</p>
               </div>
             </div>
           ))}
       
-      </div>
-      {/* <footer className="footer">
-        <div className="footer-content">
-          <div className="footer-left">
-            <h1 className="website-name">Compete.</h1>
-            <ul className="footer-links">
-              <li>
-                <a href="/services">Services</a>
-              </li>
-              <li>
-                <a href="/about">About</a>
-              </li>
-              <li>
-                <a href="/contact">Contact</a>
-              </li>
-            </ul>
-          </div>
-          <div className="footer-right">
-            <form className="newsletter-form">
-              <input type="email" placeholder="Enter your email" />
-              <button type="submit">Subscribe</button>
-            </form>
+      <div className="pagination-container">
+          <div className="pagination">
+            {/* Left arrow */}
+            {currentPage > 1 && filteredData.length > 0 && (
+              <button onClick={() => handlePageChange(currentPage - 1)}>
+                 <i className="fas fa-chevron-left"></i>
+              </button>
+            )}
+
+            {/* Current page number */}
+            <span className='page-number'>{currentPage}</span>
+
+            {/* Right arrow */}
+            {currentPage * eventsPerPage < filteredData.length && (
+              <button onClick={() => handlePageChange(currentPage + 1)}>
+                 <i className="fas fa-chevron-right"></i>
+              </button>
+            )}
           </div>
         </div>
-      </footer> */}
+      </div>
     </div>
   );
 };
 
-export default Home;
+export default Home

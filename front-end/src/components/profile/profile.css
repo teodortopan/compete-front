@@ -27,12 +27,18 @@
   margin-bottom: 10px;
 }
 
+
 .profile-email {
+  font-size: 16px;
+  color: #888;
+  margin-bottom: 10px;
+}
+
+.profile-phone-number {
   font-size: 16px;
   color: #888;
   margin-bottom: 20px;
 }
-
 .profile-button {
   background-color: #f44336;
   color: #fff;

@@ -23,6 +23,8 @@ const App = () => {
   const [eventId, setEventId] = useState('')
   const [eventTitle, setEventTitle] = useState('')
   const [userId, setUserId] = useState('')
+  const [name, setName] = useState('')
+  const [phoneNumber, setPhoneNumber] = useState('')
   useEffect(() => {
     // Check if the user is authenticated
     const token = localStorage.getItem('token'); // Get the session token or JWT from local storage
@@ -30,12 +32,16 @@ const App = () => {
     const storedTitle = localStorage.getItem('eventTitle')
     const storedId = localStorage.getItem('eventId')
     const storedUserId = localStorage.getItem('userId')
+    const storedPhoneNumber = localStorage.getItem('phoneNumber')
+    const storedName = localStorage.getItem('name')
     console.log('Token from local storage:', token);
     console.log('Username from local storage:', storedUsername);
     console.log('title from local storage:', storedTitle);
     console.log('id from local storage:', storedId);
     console.log('user id from local storage:', storedUserId);
-    if (token && storedUsername && storedTitle && storedId && storedUserId) {
+    console.log('name from local storage:', storedName);
+    console.log('phone number from local storage:', storedPhoneNumber);
+    if (token && storedUsername && storedTitle && storedId && storedUserId && storedName && storedPhoneNumber) {
       axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
       // User is authenticated
       setIsAuthenticated(true);
@@ -43,6 +49,8 @@ const App = () => {
       setEventId(storedId)
       setEventTitle(storedTitle)
       setUserId(storedUserId)
+      setName(storedName)
+      setPhoneNumber(storedPhoneNumber)
     } else {
       // User is not authenticated
       setIsAuthenticated(false);
@@ -122,8 +130,8 @@ const App = () => {
         <Route path='/contact' element={<Contact />} />
         <Route path='/signup' element={<SignUp />} />
         <Route path='/creator' element={<Creator username={username} user_id={userId}/>} />
-        <Route path='/user/:username'element={<Profile username={username} setUserId={setUserId}/>} />
-        <Route path='/event/:competition/:id'element={<Event eventId={eventId} eventTitle = {eventTitle} userId={userId}/>} />
+        <Route path='/user/:username'element={<Profile username={username} setUserId={setUserId} setName={setName} setPhoneNumber={setPhoneNumber}/>} />
+        <Route path='/event/:competition/:id'element={<Event eventId={eventId} eventTitle = {eventTitle} userId={userId} name={name} phoneNumber={phoneNumber}/>} />
         <Route
           path='/login'
           element={<Login handleLogin={() => setIsAuthenticated(true)} setEmail={handleEmailChange} getUsername={getUsername} />}

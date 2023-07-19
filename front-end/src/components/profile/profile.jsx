@@ -3,7 +3,7 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import './profile.css';
 
-const Profile = ({ username, setUserId }) => {
+const Profile = ({ username, setName, setPhoneNumber }) => {
   const navigate = useNavigate();
   const [userData, setUserData] = useState(null);
   // const [isHovered, setIsHovered] = useState(false);
@@ -14,7 +14,11 @@ const Profile = ({ username, setUserId }) => {
         const response = await axios.get(`http://localhost:3000/user/${username}`);
         setUserData(response.data);
         localStorage.setItem('userId', response.data.user_id)
+        localStorage.setItem('name', response.data.first_name + ' ' + response.data.last_name)
+        localStorage.setItem('phoneNumber', response.data.phone_number)
         console.log(response.data.user_id)
+        console.log(response.data.first_name + ' ' + response.data.last_name)
+        console.log(response.data.phone_number)
       } catch (error) {
         console.error('Error fetching user data:', error);
       }
@@ -93,6 +97,9 @@ const Profile = ({ username, setUserId }) => {
       </p>
       <p className="profile-email">
         <strong>Email:</strong> {userData.email}
+      </p>
+      <p className="profile-phone-number">
+        <strong>Phone Number:</strong> {userData.phone_number}
       </p>
       <button className="profile-button" onClick={logOut}>
         Log Out
