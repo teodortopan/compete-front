@@ -3,7 +3,7 @@ import './login.css';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
-const Login = ({handleLogin, setEmail}) => {
+const Login = ({handleLogin, setEmail, setLoginMessage, setUserId}) => {
   const navigate = useNavigate();
   const [usernameOrEmail, setUsernameOrEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -27,17 +27,21 @@ const Login = ({handleLogin, setEmail}) => {
         console.log('Token:', response.data.token);
         console.log('Username:', response.data.username);
         setEmail(usernameOrEmail)
-
+        setLoginMessage(`Successfully logged in as ${response.data.username}!`)
         handleLogin()
         // Login successful
         console.log('Login successful!');
         // Clear form fields
         setUsernameOrEmail('');
         setPassword('');
+        
+        navigate(`/user/${response.data.username}`);
 
-        navigate(`/`);
-
-        window.location.reload()
+        setTimeout(() => {
+          setLoginMessage('')
+        }, 3000)
+        
+        // window.location.reload()
       } else {
         // Invalid username/email or password
         setError('Invalid username/email or password.');

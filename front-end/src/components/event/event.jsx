@@ -3,11 +3,13 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import './event.css';
 
-const Event = ({ eventId, eventTitle, userId, name, phoneNumber }) => {
+const Event = ({ eventId, eventTitle, userId, name, phoneNumber, setSuccessMessage, setDeleteMessage }) => {
   const navigate = useNavigate();
   const [eventData, setEventData] = useState('');
   const [showPopup, setShowPopup] = useState(false);
-  console.log({userId})
+  const [error, setError] = useState('');
+  console.log({ userId });
+
   useEffect(() => {
     const getEventData = async () => {
       try {
@@ -25,67 +27,89 @@ const Event = ({ eventId, eventTitle, userId, name, phoneNumber }) => {
   }
 
   const { title, description, organizer, location, event_time, date, price, images, user_id } = eventData;
-  console.log(eventData)
+  console.log(eventData);
+
   const handlePopup = () => {
     setShowPopup(true);
   };
 
   const handleConfirm = async () => {
-    const response = await axios.post(`http://localhost:3000/participate/${eventId}`, {
-      name: name,
-      phoneNumber: phoneNumber,
-    })
-    console.log(response.data)
-    setShowPopup(false);
-    navigate('/')
-    window.location.reload()
+    try {
+      const response = await axios.post(`http://localhost:3000/participate/${eventId}`, {
+        name: name,
+        phoneNumber: phoneNumber,
+        userId: userId,
+      });
+
+      if (response.status === 200) {
+        setShowPopup(false);
+        navigate('/');
+        setSuccessMessage(`Successfully registered for ${title}!`);
+        setTimeout(() => {
+          setSuccessMessage('');
+        }, 3000);
+      }
+    } catch (error) {
+      if (error.response && error.response.data && error.response.data.error) {
+        setError(error.response.data.error);
+      } else {
+        setError('An error occurred while registering for the event.');
+      }
+    }
   };
 
   const handleCancel = () => {
     setShowPopup(false);
   };
 
-  const handleDelete = () => {
-    axios.post(`http://localhost:3000/event/${eventTitle}/${eventId}/delete`)
-    navigate('/')
-    window.location.reload()
-  }
+  const handleDelete = async () => {
+    try {
+      await axios.post(`http://localhost:3000/event/${eventTitle}/${eventId}/delete`);
+      navigate('/');
+      setDeleteMessage(`Successfully deleted ${title}!`);
+      setTimeout(() => {
+        setDeleteMessage('');
+      }, 3000);
+    } catch (error) {
+      setError('An error occurred while deleting the event.');
+    }
+  };
 
-  if(userId == user_id) {
-    return(
+  if (userId == user_id) {
+    return (
       <div className="individual-container">
-      <div className="individual-left">
-        <img src={images} alt="Event" className="individual-image" />
-        <h1 className="individual-title">{title}</h1>
-        <p className="individual-description">{description}</p>
-        <p className="individual-organizer">Organizer: {organizer}</p>
-        <p className="individual-location">Location: {location}</p>
-        <p className="individual-time">Event Time: {event_time}</p>
-        <p className="individual-date">Date: {date.substring(0, 10)}</p>
-        <p className="individual-price">Participation fee: {price}$</p>
-        <button className="individual-delete-button" onClick={handlePopup}>
-          Delete Event
-        </button>
-      </div>
+        <div className="individual-left">
+          <img src={images} alt="Event" className="individual-image" />
+          <h1 className="individual-title">{title}</h1>
+          <p className="individual-description">{description}</p>
+          <p className="individual-organizer">Organizer: {organizer}</p>
+          <p className="individual-location">Location: {location}</p>
+          <p className="individual-time">Event Time: {event_time}</p>
+          <p className="individual-date">Date: {date.substring(0, 10)}</p>
+          <p className="individual-price">Participation fee: {price}$</p>
+          <button className="individual-delete-button" onClick={handlePopup}>
+            Delete Event
+          </button>
+        </div>
 
-      {showPopup && (
-  <div className="popup">
-    <div className="popup-content">
-      <h2 className="popup-title">Confirmation</h2>
-      <p className="popup-message">Are you sure you want to permanently delete this event?</p>
-      <div className="popup-buttons">
-        <button className="popup-button" onClick={handleDelete}>
-          Yes
-        </button>
-        <button className="popup-button" onClick={handleCancel}>
-          No
-        </button>
+        {showPopup && (
+          <div className="popup">
+            <div className="popup-content">
+              <h2 className="popup-title">Confirmation</h2>
+              <p className="popup-message">Are you sure you want to permanently delete this event?</p>
+              <div className="popup-buttons">
+                <button className="popup-button" onClick={handleDelete}>
+                  Yes
+                </button>
+                <button className="popup-button" onClick={handleCancel}>
+                  No
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
-    </div>
-  </div>
-    )}
-    </div>
-    )
+    );
   }
 
   return (
@@ -99,27 +123,28 @@ const Event = ({ eventId, eventTitle, userId, name, phoneNumber }) => {
         <p className="individual-time">Event Time: {event_time}</p>
         <p className="individual-date">Date: {date.substring(0, 10)}</p>
         <p className="individual-price">Price: {price}$</p>
+        {error && <p className="error-registration-message">You are already registered for this event!</p>}
         <button className="individual-button" onClick={handlePopup}>
           Participate
         </button>
       </div>
 
       {showPopup && (
-  <div className="popup">
-    <div className="popup-content">
-      <h2 className="popup-title">Confirmation</h2>
-      <p className="popup-message">Are you sure you want to participate in this event?</p>
-      <div className="popup-buttons">
-        <button className="popup-button" onClick={handleConfirm}>
-          Yes
-        </button>
-        <button className="popup-button" onClick={handleCancel}>
-          No
-        </button>
-      </div>
-    </div>
-  </div>
-    )}
+        <div className="popup">
+          <div className="popup-content">
+            <h2 className="popup-title">Confirmation</h2>
+            <p className="popup-message">Are you sure you want to participate in this event?</p>
+            <div className="popup-buttons">
+              <button className="popup-button" onClick={handleConfirm}>
+                Yes
+              </button>
+              <button className="popup-button" onClick={handleCancel}>
+                No
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

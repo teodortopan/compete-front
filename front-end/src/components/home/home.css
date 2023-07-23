@@ -150,6 +150,71 @@
   font-size: 20px;
   padding: 5px;
 }
+
+.success-banner {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 200px;
+  background-color: #79d27c; /* Green for success banner or choose your own colors */
+  color: #fff;
+  text-align: center;
+  font-size: 18px;
+  z-index: 9999;
+  opacity: 0;
+  pointer-events: none;
+  animation: fadeInOut 3s ease-in-out;
+}
+
+.delete-banner {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 200px;
+  background-color: #c63f3f; /* Green for success banner or choose your own colors */
+  color: #fff;
+  text-align: center;
+  font-size: 18px;
+  z-index: 9999;
+  opacity: 0;
+  pointer-events: none;
+  animation: fadeInOut 3s ease-in-out;
+}
+
+.login-banner {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 200px;
+  background-color: #437cd3; /* Green for success banner or choose your own colors */
+  color: #fff;
+  text-align: center;
+  font-size: 18px;
+  z-index: 9999;
+  opacity: 0;
+  pointer-events: none;
+  animation: fadeInOut 3s ease-in-out;
+}
+
+@keyframes fadeInOut {
+  0% { opacity: 1; }
+  25%, 75% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+/* Add transition effect to slide up the banner after 4 seconds */
+.success-banner.fade-out,
+.delete-banner.fade-out,
+.login-banner.fade-out {
+  opacity: 0;
+  pointer-events: none;
+}
 /* .footer {
   grid-column: 1 / span 2;
   background-color: rgba(245, 245, 245, 0.8);

@@ -27,6 +27,58 @@ app.use(cors());
 app.use(express.json());
 app.use(upload);
 
+app.get('/profile/:username', async (req, res) => {
+  try {
+    const username = req.params.username; // Access the user ID from the URL parameter
+    // Query the database to retrieve user data based on the user ID
+    const lowerUsername = username.toLowerCase()
+    const result = await pool.query('SELECT * FROM user_accounts WHERE LOWER(username) = $1', [lowerUsername]);
+    
+    if (result.rows.length === 1) {
+      const user = result.rows[0];
+      // Return the user data as the response
+      res.json(user);
+    } else {
+      // User not found
+      res.sendStatus(404);
+    }
+  } catch (error) {
+    console.error('Error retrieving user:', error);
+    res.sendStatus(500);
+  }
+});
+
+app.get('/:name/:id', async (req, res) => {
+  try {
+    const name = req.params.name; // Access the username from the URL parameter
+    const decodedName = decodeURIComponent(name)
+    const id = req.params.id; // Access the user ID from the URL parameter
+    // Convert the username to lowercase to ensure case-insensitive comparison
+    const lowerName = decodedName.toLowerCase();
+    
+    // Query the database to retrieve competitions where user_id is equal to id
+    // and where the first element in the participants array is equal to the username
+    const query = `SELECT * FROM competitions WHERE user_id = $1 OR EXISTS (
+      SELECT 1
+      FROM unnest(participants) AS p
+      WHERE LOWER(p->>'name') ILIKE $2
+    );`;
+
+    const result = await pool.query(query, [id, lowerName]);
+
+    if (result.rows.length > 0) {
+      const competitions = result.rows;
+      // Return the competitions data as the response
+      res.json(competitions);
+    } else {
+      // No competitions found
+      res.sendStatus(404);
+    }
+  } catch (error) {
+    console.error('Error retrieving competitions:', error);
+    res.sendStatus(500);
+  }
+});
 // Define POST request to post user account data to postgreSQL table
 app.post('/post_user', async (req, res) => {
   try {
@@ -94,27 +146,6 @@ app.get('/user_accounts', async (req, res) => {
     res.status(500).json({ error: 'Internal Server Error' });
   }
 })
-
-app.get('/user/:username', async (req, res) => {
-  try {
-    const username = req.params.username; // Access the user ID from the URL parameter
-    // Query the database to retrieve user data based on the user ID
-    const lowerUsername = username.toLowerCase()
-    const result = await pool.query('SELECT * FROM user_accounts WHERE LOWER(username) = $1', [lowerUsername]);
-    
-    if (result.rows.length === 1) {
-      const user = result.rows[0];
-      // Return the user data as the response
-      res.json(user);
-    } else {
-      // User not found
-      res.sendStatus(404);
-    }
-  } catch (error) {
-    console.error('Error retrieving user:', error);
-    res.sendStatus(500);
-  }
-});
 
 app.get('/event/:competition/:id', async (req, res) => {
   try {
@@ -233,14 +264,30 @@ app.post('/post_competitions', async (req, res) => {
 
 app.post('/participate/:id', async (req, res) => {
   try {
-    const id = req.params.id
-    const { name, phoneNumber } = req.body; // Assuming your request contains name and phoneNumber
+    const id = req.params.id;
+    const { name, phoneNumber, userId } = req.body; // Assuming your request contains name and phoneNumber
+
+    const checkQuery = 'SELECT participants FROM competitions WHERE post_id = $1';
+    const checkResult = await pool.query(checkQuery, [id]);
+    const participants = checkResult.rows[0]?.participants || [];
+
+    // Check if the user is already a participant
+    const isAlreadyParticipant = participants.some((participant) => participant.name.toLowerCase() === name.toLowerCase());
+
+    if (isAlreadyParticipant) {
+      // User already exists
+      return res.status(400).json({ error: 'You are already registered for this event!' });
+    }
+
+    // Add the user to the participants array
 
     // Query to update the 'participants' column in the 'competitions' table
-    const updateQuery = `UPDATE competitions SET participants = array_append(participants, $1) WHERE post_id = $2;`;
+    const updateQuery = `UPDATE competitions
+    SET participants = participants || '{"name": $1, "phone number": $2}'::jsonb;
+    `;
 
     // Execute the query using the pool
-    await pool.query(updateQuery, [[name, phoneNumber], id]);
+    await pool.query(updateQuery, [name, phoneNumber]);
 
     res.status(200).json({ message: 'Successfully updated participants' });
   } catch (err) {

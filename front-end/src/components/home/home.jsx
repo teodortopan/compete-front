@@ -1,29 +1,28 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import './home.css';
 import Footer from '../footer/footer';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 
-const Home = ({ filterDataByCategory, filteredData, onEventId, onEventTitle }) => {
+const Home = ({ filterDataByCategory, filteredData, onEventId, onEventTitle, successMessage, deleteMessage, loginMessage, setLoginMessage }) => {
   const navigate = useNavigate();
   const [currentPage, setCurrentPage] = useState(1);
   const eventsPerPage = 9;
   const handleEventClick = (id, title) => {
     const token = localStorage.getItem('token');
 
-    if(token) {
-      localStorage.setItem('eventTitle', title)
-      localStorage.setItem('eventId', id)
-      onEventId(id)
-      onEventTitle(title)
-      console.log(id)
-      console.log(title)
-      navigate(`/event/${title}/${id}`)
+    if (token) {
+      localStorage.setItem('eventTitle', title);
+      localStorage.setItem('eventId', id);
+      onEventId(id);
+      onEventTitle(title);
+      console.log(id);
+      console.log(title);
+      navigate(`/event/${title}/${id}`);
+    } else {
+      navigate('/login');
     }
-    else {
-      navigate('/login')
-    }
-
-  }
+  };
 
   const handlePageChange = (page) => {
     setCurrentPage(page);
@@ -36,8 +35,11 @@ const Home = ({ filterDataByCategory, filteredData, onEventId, onEventTitle }) =
   const totalEvents = filteredData.length;
   const totalPages = Math.ceil(totalEvents / eventsPerPage);
 
+
   return (
     <div className="container">
+      {successMessage && <div className="success-banner">{successMessage}</div>}
+      {deleteMessage && <div className="delete-banner">{deleteMessage}</div>}
       <div className="sidebar">
         <h4>Categories</h4>
         <ul className="category-list">
@@ -107,7 +109,7 @@ const Home = ({ filterDataByCategory, filteredData, onEventId, onEventTitle }) =
           <div className="pagination">
             {/* Left arrow */}
             {currentPage > 1 && filteredData.length > 0 && (
-              <button onClick={() => handlePageChange(currentPage - 1)}>
+              <button key="prev" onClick={() => handlePageChange(currentPage - 1)}>
                  <i className="fas fa-chevron-left"></i>
               </button>
             )}
@@ -117,7 +119,7 @@ const Home = ({ filterDataByCategory, filteredData, onEventId, onEventTitle }) =
 
             {/* Right arrow */}
             {currentPage * eventsPerPage < filteredData.length && (
-              <button onClick={() => handlePageChange(currentPage + 1)}>
+              <button key='next' onClick={() => handlePageChange(currentPage + 1)}>
                  <i className="fas fa-chevron-right"></i>
               </button>
             )}

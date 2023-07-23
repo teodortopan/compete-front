@@ -12,6 +12,7 @@ import Profile from './components/profile/profile';
 import Footer from './components/footer/footer';
 import Event from './components/event/event'
 import Creator from './components/creator/creator';
+import UserEvents from './components/userEvents/userEvents';
 
 const App = () => {
   const [data, setData] = useState([]);
@@ -25,6 +26,9 @@ const App = () => {
   const [userId, setUserId] = useState('')
   const [name, setName] = useState('')
   const [phoneNumber, setPhoneNumber] = useState('')
+  const [successMessage, setSuccessMessage] = useState('');
+  const [deleteMessage, setDeleteMessage] = useState('');
+  const [loginMessage, setLoginMessage] = useState('')
   useEffect(() => {
     // Check if the user is authenticated
     const token = localStorage.getItem('token'); // Get the session token or JWT from local storage
@@ -35,13 +39,11 @@ const App = () => {
     const storedPhoneNumber = localStorage.getItem('phoneNumber')
     const storedName = localStorage.getItem('name')
     console.log('Token from local storage:', token);
-    console.log('Username from local storage:', storedUsername);
-    console.log('title from local storage:', storedTitle);
-    console.log('id from local storage:', storedId);
+    console.log('Username from local storage:', storedUsername)
     console.log('user id from local storage:', storedUserId);
     console.log('name from local storage:', storedName);
     console.log('phone number from local storage:', storedPhoneNumber);
-    if (token && storedUsername && storedTitle && storedId && storedUserId && storedName && storedPhoneNumber) {
+    if (token && storedUsername && storedUserId && storedName && storedPhoneNumber) {
       axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
       // User is authenticated
       setIsAuthenticated(true);
@@ -94,7 +96,7 @@ const App = () => {
   };
 
   const filteredData = selectedCategory
-    ? data.filter(
+    ? data.filter( 
         (item) =>
           item.category.includes(selectedCategory) &&
           item.title.toLowerCase().includes(searchText?.toLowerCase() || '')
@@ -122,19 +124,21 @@ const App = () => {
         setSearchText={setSearchText}
         isAuthenticated={isAuthenticated}
         username={username}
+        userId={userId}
       />
       <Routes>
-        <Route exact path='/' element={<Home filterDataByCategory={filterDataByCategory} filteredData={filteredData} onEventId={handleEventId} onEventTitle={handleEventTitle}/>} />
+        <Route exact path='/' element={<Home filterDataByCategory={filterDataByCategory} filteredData={filteredData} onEventId={handleEventId} onEventTitle={handleEventTitle} successMessage={successMessage} deleteMessage={deleteMessage} loginMessage={loginMessage} setLoginMessage={setLoginMessage}/>} />
         <Route path='/services' element={<Services />} />
         <Route path='/about' element={<About />} />
         <Route path='/contact' element={<Contact />} />
         <Route path='/signup' element={<SignUp />} />
         <Route path='/creator' element={<Creator username={username} user_id={userId}/>} />
-        <Route path='/user/:username'element={<Profile username={username} setUserId={setUserId} setName={setName} setPhoneNumber={setPhoneNumber}/>} />
-        <Route path='/event/:competition/:id'element={<Event eventId={eventId} eventTitle = {eventTitle} userId={userId} name={name} phoneNumber={phoneNumber}/>} />
+        <Route path='/user/:username'element={<Profile username={username} setUserId={setUserId} setName={setName} setPhoneNumber={setPhoneNumber} setLoginMessage={setLoginMessage} loginMessage={loginMessage}/>} />
+        <Route path='/user/:username/:id/events'element={<UserEvents name={name} userId={userId}/>} />
+        <Route path='/event/:competition/:id'element={<Event eventId={eventId} eventTitle = {eventTitle} userId={userId} name={name} phoneNumber={phoneNumber} setDeleteMessage={setDeleteMessage} setSuccessMessage={setSuccessMessage}/>} />
         <Route
           path='/login'
-          element={<Login handleLogin={() => setIsAuthenticated(true)} setEmail={handleEmailChange} getUsername={getUsername} />}
+          element={<Login handleLogin={() => setIsAuthenticated(true)} setEmail={handleEmailChange} getUsername={getUsername} setLoginMessage={setLoginMessage}/>}
         />
       </Routes>
       <Footer />

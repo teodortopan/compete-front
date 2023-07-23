@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Navbar, Nav, Form, FormControl, Button } from 'react-bootstrap';
 
-const Navigation = ({ filterDataByCategory, setSearchText, isAuthenticated, username }) => {
+const Navigation = ({ filterDataByCategory, setSearchText, isAuthenticated, username, userId }) => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -57,6 +57,11 @@ const Navigation = ({ filterDataByCategory, setSearchText, isAuthenticated, user
         <Nav style={{ marginLeft: '40rem', display: 'flex', alignItems: 'center'}}>
           {isAuthenticated ? (
             <>
+            <Nav.Item style={{marginRight: '10px'}}>
+              <Nav.Link as={Link} to={`/user/${username}/${userId}/events`} className="nav-link">
+                Your Events
+              </Nav.Link>
+            </Nav.Item>
             <Nav.Item style={{marginRight: '10px'}}>
               <Nav.Link as={Link} to="/creator" className="nav-link">
                 Create Event
