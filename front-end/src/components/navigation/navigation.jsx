@@ -45,7 +45,7 @@ const Navigation = ({ filterDataByCategory, setSearchText, isAuthenticated, user
             </Nav.Link>
           </Nav.Item>
         </Nav>
-        <Form inline>
+        <Form inline="true" style={{marginLeft: '30px', minWidth: '200px'}}>
           <FormControl
             type="text"
             placeholder="Search"
@@ -54,20 +54,20 @@ const Navigation = ({ filterDataByCategory, setSearchText, isAuthenticated, user
             onKeyDown={handleKeyDown}
           />
         </Form>
-        <Nav style={{ marginLeft: '40rem', display: 'flex', alignItems: 'center'}}>
+        <Nav style={{ marginLeft: '25rem', display: 'flex', alignItems: 'center'}}>
           {isAuthenticated ? (
             <>
-            <Nav.Item style={{marginRight: '10px'}}>
+            <Nav.Item style={{marginRight: '20px'}}>
               <Nav.Link as={Link} to={`/user/${username}/${userId}/events`} className="nav-link">
-                Your Events
+                Created & Registered Events
               </Nav.Link>
             </Nav.Item>
-            <Nav.Item style={{marginRight: '10px'}}>
+            <Nav.Item style={{marginRight: '20px'}}>
               <Nav.Link as={Link} to="/creator" className="nav-link">
                 Create Event
               </Nav.Link>
             </Nav.Item>
-            <Nav.Item style={{marginRight: '10px'}}>
+            <Nav.Item style={{marginRight: '20px'}}>
               <Nav.Link as={Link} to={`/user/${username}`} className="nav-link">
                 Currently logged in as: {username}
               </Nav.Link>

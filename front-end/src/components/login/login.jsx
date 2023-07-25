@@ -27,8 +27,8 @@ const Login = ({handleLogin, setEmail, setLoginMessage, setUserId}) => {
         console.log('Token:', response.data.token);
         console.log('Username:', response.data.username);
         setEmail(usernameOrEmail)
-        setLoginMessage(`Successfully logged in as ${response.data.username}!`)
         handleLogin()
+        setLoginMessage(`Successfully logged in as ${response.data.username}!`)
         // Login successful
         console.log('Login successful!');
         // Clear form fields
@@ -36,12 +36,10 @@ const Login = ({handleLogin, setEmail, setLoginMessage, setUserId}) => {
         setPassword('');
         
         navigate(`/user/${response.data.username}`);
-
+        
         setTimeout(() => {
           setLoginMessage('')
-        }, 3000)
-        
-        // window.location.reload()
+        }, 2500)
       } else {
         // Invalid username/email or password
         setError('Invalid username/email or password.');

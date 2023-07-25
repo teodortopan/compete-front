@@ -4,7 +4,8 @@ import Footer from '../footer/footer';
 import './userEvents.css'
 import { useNavigate, Link } from 'react-router-dom';
 
-const UserEvents = ({ name, userId }) => {
+const UserEvents = ({ userId }) => {
+  const storedName = localStorage.getItem('name')
   const navigate = useNavigate();
   const [userEventData, setUserEventData] = useState(null)
   const [currentPage, setCurrentPage] = useState(1);
@@ -15,10 +16,10 @@ const UserEvents = ({ name, userId }) => {
   }
   
   useEffect(() => {
-    console.log(userId, name)
+    console.log(userId, storedName)
     const getUserEventData = async () => {
       try {
-        const encodedName = encodeURIComponent(name)
+        const encodedName = encodeURIComponent(storedName)
         console.log(encodedName)
         const response = await axios.get(`http://localhost:3000/${encodedName}/${userId}`);
         setUserEventData(response.data);
@@ -28,9 +29,9 @@ const UserEvents = ({ name, userId }) => {
       }
     };
     getUserEventData();
-  }, [name, userId]);
+  }, [storedName, userId]);
 
-  if (userEventData === null) {
+  if (userEventData === null || !storedName) {
     return <div>Loading...</div>;
   }
   

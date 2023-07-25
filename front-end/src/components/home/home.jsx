@@ -7,6 +7,8 @@ import { useNavigate, Link } from 'react-router-dom';
 const Home = ({ filterDataByCategory, filteredData, onEventId, onEventTitle, successMessage, deleteMessage, loginMessage, setLoginMessage }) => {
   const navigate = useNavigate();
   const [currentPage, setCurrentPage] = useState(1);
+  const [sortOption, setSortOption] = useState('None');
+  const [data, setData] = useState([]);
   const eventsPerPage = 9;
   const handleEventClick = (id, title) => {
     const token = localStorage.getItem('token');
@@ -28,11 +30,32 @@ const Home = ({ filterDataByCategory, filteredData, onEventId, onEventTitle, suc
     setCurrentPage(page);
   };
 
+  const handleSortChange = (event) => {
+    setSortOption(event.target.value);
+  };
+
+  const sortData = (data) => {
+    // Sort the data based on the selected option
+    switch (sortOption) {
+      case 'PriceLowToHigh':
+        return data.slice().sort((a, b) => a.price - b.price);
+      case 'PriceHighToLow':
+        return data.slice().sort((a, b) => b.price - a.price);
+      default:
+        return data;
+    }
+  };
+
+  useEffect(() => {
+    const sortedData = sortData(filteredData);
+    setData(sortedData);
+  }, [filteredData, sortOption]);
+
   const indexOfLastEvent = currentPage * eventsPerPage;
   const indexOfFirstEvent = indexOfLastEvent - eventsPerPage;
-  const currentEvents = filteredData.slice(indexOfFirstEvent, indexOfLastEvent);
+  const currentEvents = data.slice(indexOfFirstEvent, indexOfLastEvent);
 
-  const totalEvents = filteredData.length;
+  const totalEvents = data.length;
   const totalPages = Math.ceil(totalEvents / eventsPerPage);
 
 
@@ -42,6 +65,14 @@ const Home = ({ filterDataByCategory, filteredData, onEventId, onEventTitle, suc
       {deleteMessage && <div className="delete-banner">{deleteMessage}</div>}
       <div className="sidebar">
         <h4>Categories</h4>
+        <div className="sorting-dropdown">
+          <label htmlFor="sortOption">Sort By:</label>
+          <select id="sortOption" value={sortOption} onChange={handleSortChange}>
+            <option value="None">None</option>
+            <option value="PriceLowToHigh">Price Low to High</option>
+            <option value="PriceHighToLow">Price High to Low</option>
+          </select>
+        </div>
         <ul className="category-list">
           <li onClick={() => filterDataByCategory('')} className="category-item">
             None

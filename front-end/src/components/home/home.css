@@ -29,6 +29,10 @@
   font-size: large;
 }
 
+.category-item:first-child {
+  margin-top: 0;
+}
+
 .category-item:hover {
   cursor: pointer;
   opacity: 0.5;
