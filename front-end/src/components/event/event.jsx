@@ -3,14 +3,15 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import './event.css';
 
-const Event = ({ eventId, eventTitle, userId, name, phoneNumber, setSuccessMessage, setDeleteMessage }) => {
+const Event = ({ eventId, eventTitle, userId, name, phoneNumber, setSuccessMessage, setDeleteMessage, setReviewPopup, reviewerStatus }) => {
   const navigate = useNavigate();
   const [eventData, setEventData] = useState('');
-  const [showPopup, setShowPopup] = useState(false);
+  const [showConfirmationPopup, setConfirmationPopup] = useState(false);
   const [error, setError] = useState('');
   console.log({ userId });
 
   useEffect(() => {
+    console.log(reviewerStatus)
     const getEventData = async () => {
       try {
         const response = await axios.get(`http://localhost:3000/event/${eventTitle}/${eventId}`);
@@ -27,10 +28,9 @@ const Event = ({ eventId, eventTitle, userId, name, phoneNumber, setSuccessMessa
   }
 
   const { title, description, organizer, location, event_time, date, price, images, user_id } = eventData;
-  console.log(eventData);
 
   const handlePopup = () => {
-    setShowPopup(true);
+    setConfirmationPopup(true);
   };
 
   const handleConfirm = async () => {
@@ -42,8 +42,10 @@ const Event = ({ eventId, eventTitle, userId, name, phoneNumber, setSuccessMessa
       });
 
       if (response.status === 200) {
-        setShowPopup(false);
+        setConfirmationPopup(false);
         navigate('/');
+        handleParticipation()
+        setReviewPopup(true)
         setSuccessMessage(`Successfully registered for ${title}!`);
         setTimeout(() => {
           setSuccessMessage('');
@@ -58,8 +60,15 @@ const Event = ({ eventId, eventTitle, userId, name, phoneNumber, setSuccessMessa
     }
   };
 
+  const handleParticipation = () => {
+    console.log(reviewerStatus)
+    if(reviewerStatus == false) {
+      setReviewPopup(true)
+    }
+  }
+
   const handleCancel = () => {
-    setShowPopup(false);
+    setConfirmationPopup(false);
   };
 
   const handleDelete = async () => {
@@ -92,7 +101,7 @@ const Event = ({ eventId, eventTitle, userId, name, phoneNumber, setSuccessMessa
           </button>
         </div>
 
-        {showPopup && (
+        {showConfirmationPopup && (
           <div className="popup">
             <div className="popup-content">
               <h2 className="popup-title">Confirmation</h2>
@@ -129,7 +138,7 @@ const Event = ({ eventId, eventTitle, userId, name, phoneNumber, setSuccessMessa
         </button>
       </div>
 
-      {showPopup && (
+      {showConfirmationPopup && (
         <div className="popup">
           <div className="popup-content">
             <h2 className="popup-title">Confirmation</h2>

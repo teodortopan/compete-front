@@ -262,6 +262,26 @@ app.post('/post_competitions', async (req, res) => {
   }
 })
 
+app.post('/review', async (req, res) => {
+  try {
+    const {name, review, id} = req.body
+
+    console.log('Received name:', name);
+    console.log('Received review:', review);
+    console.log('Received id:', id);
+    
+    // Insert data into the users table
+    const query = 'UPDATE reviews SET general_reviews = general_reviews || $1';
+    console.log(review)
+    await pool.query(query, [[{ name, review, id }]]);
+
+    res.json(200) // Send a success response
+  } catch (err) {
+    console.error('Error executing query', err);
+    res.status(500).json({ error: 'Server error' });
+  }
+})
+
 app.post('/participate/:id', async (req, res) => {
   try {
     const id = req.params.id;
@@ -278,16 +298,20 @@ app.post('/participate/:id', async (req, res) => {
       // User already exists
       return res.status(400).json({ error: 'You are already registered for this event!' });
     }
+  
+
 
     // Add the user to the participants array
 
     // Query to update the 'participants' column in the 'competitions' table
-    const updateQuery = `UPDATE competitions
-    SET participants = participants || '{"name": $1, "phone number": $2}'::jsonb;
-    `;
+    const updateQuery = `
+  UPDATE competitions
+  SET participants = participants || $1
+  WHERE post_id = $2;
+`;
 
-    // Execute the query using the pool
-    await pool.query(updateQuery, [name, phoneNumber]);
+// Execute the query using the pool
+await pool.query(updateQuery, [[{ name, 'phone number': phoneNumber }], id]);
 
     res.status(200).json({ message: 'Successfully updated participants' });
   } catch (err) {

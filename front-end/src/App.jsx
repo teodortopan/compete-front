@@ -29,6 +29,8 @@ const App = () => {
   const [successMessage, setSuccessMessage] = useState('');
   const [deleteMessage, setDeleteMessage] = useState('');
   const [loginMessage, setLoginMessage] = useState('')
+  const [reviewPopup, setReviewPopup] = useState(false)
+  const [reviewerStatus, setReviewerStatus] = useState(false)
   useEffect(() => {
     // Check if the user is authenticated
     const token = localStorage.getItem('token'); // Get the session token or JWT from local storage
@@ -38,14 +40,17 @@ const App = () => {
     const storedUserId = localStorage.getItem('userId')
     const storedPhoneNumber = localStorage.getItem('phoneNumber')
     const storedName = localStorage.getItem('name')
+    const storedReviewerStatus = localStorage.getItem('reviewerStatus')
     console.log('Token from local storage:', token);
     console.log('Username from local storage:', storedUsername)
     console.log('user id from local storage:', storedUserId);
     console.log('name from local storage:', storedName);
     console.log('phone number from local storage:', storedPhoneNumber);
+    console.log('reviewer status from local storage:', storedReviewerStatus);
     if (token && storedUsername && storedUserId && storedName && storedPhoneNumber) {
       axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
       // User is authenticated
+      setReviewerStatus(storedReviewerStatus)
       setIsAuthenticated(true);
       setUsername(storedUsername);
       setEventId(storedId)
@@ -127,7 +132,7 @@ const App = () => {
         userId={userId}
       />
       <Routes>
-        <Route exact path='/' element={<Home filterDataByCategory={filterDataByCategory} filteredData={filteredData} onEventId={handleEventId} onEventTitle={handleEventTitle} successMessage={successMessage} deleteMessage={deleteMessage} loginMessage={loginMessage} setLoginMessage={setLoginMessage}/>} />
+        <Route exact path='/' element={<Home filterDataByCategory={filterDataByCategory} filteredData={filteredData} onEventId={handleEventId} onEventTitle={handleEventTitle} successMessage={successMessage} deleteMessage={deleteMessage} loginMessage={loginMessage} setLoginMessage={setLoginMessage} reviewPopup={reviewPopup} setReviewPopup={setReviewPopup} name={name} eventId={eventId} userId={userId} setReviewerStatus={setReviewerStatus}/>} />
         <Route path='/services' element={<Services />} />
         <Route path='/about' element={<About />} />
         <Route path='/contact' element={<Contact />} />
@@ -135,7 +140,7 @@ const App = () => {
         <Route path='/creator' element={<Creator username={username} user_id={userId}/>} />
         <Route path='/user/:username'element={<Profile username={username} setUserId={setUserId} setName={setName} setPhoneNumber={setPhoneNumber} setLoginMessage={setLoginMessage} loginMessage={loginMessage}/>} />
         <Route path='/user/:username/:id/events'element={<UserEvents name={name} userId={userId}/>} />
-        <Route path='/event/:competition/:id'element={<Event eventId={eventId} eventTitle = {eventTitle} userId={userId} name={name} phoneNumber={phoneNumber} setDeleteMessage={setDeleteMessage} setSuccessMessage={setSuccessMessage}/>} />
+        <Route path='/event/:competition/:id'element={<Event eventId={eventId} eventTitle = {eventTitle} userId={userId} name={name} phoneNumber={phoneNumber} setDeleteMessage={setDeleteMessage} setSuccessMessage={setSuccessMessage} setReviewPopup={setReviewPopup} reviewerStatus={reviewerStatus}/>} />
         <Route
           path='/login'
           element={<Login handleLogin={() => setIsAuthenticated(true)} setEmail={handleEmailChange} getUsername={getUsername} setLoginMessage={setLoginMessage}/>}

@@ -4,11 +4,14 @@ import './home.css';
 import Footer from '../footer/footer';
 import { useNavigate, Link } from 'react-router-dom';
 
-const Home = ({ filterDataByCategory, filteredData, onEventId, onEventTitle, successMessage, deleteMessage, loginMessage, setLoginMessage }) => {
+const Home = ({ filterDataByCategory, filteredData, onEventId, onEventTitle, successMessage, deleteMessage, reviewPopup, setReviewPopup, name, userId}) => {
   const navigate = useNavigate();
   const [currentPage, setCurrentPage] = useState(1);
+  const [reviewBody, setReviewBody] = useState('')
   const [sortOption, setSortOption] = useState('None');
   const [data, setData] = useState([]);
+  const [error, setError] = useState('');
+  const eventId = localStorage.getItem('eventId')
   const eventsPerPage = 9;
   const handleEventClick = (id, title) => {
     const token = localStorage.getItem('token');
@@ -45,6 +48,41 @@ const Home = ({ filterDataByCategory, filteredData, onEventId, onEventTitle, suc
         return data;
     }
   };
+
+  const handleReviewSubmit = async(e) => {
+    e.preventDefault()
+    setError('');
+
+    try {
+      console.log(reviewBody)
+      // const response = await axios.post(`http://localhost:3000/review/${eventId}`, {
+      //   name,
+      //   review: reviewBody,
+      // })
+      const response = await axios.post(`http://localhost:3000/review`, {
+        name,
+        review: reviewBody,
+        id: userId,
+      })
+      if(response.status == 200) {
+        console.log(response.data)
+        setReviewPopup(false)
+        localStorage.setItem('reviewerStatus', true)
+        window.location.reload()
+      }
+    } catch (error) {
+      console.error('Error sending review:', error);
+      setError('Error sending review.');
+    }
+  }
+
+  const handleReviewDecline = () => {
+    setReviewPopup(false)
+  }
+
+  const handleReviewBodyChange = (text) => {
+    setReviewBody(text)
+  }
 
   useEffect(() => {
     const sortedData = sortData(filteredData);
@@ -156,6 +194,34 @@ const Home = ({ filterDataByCategory, filteredData, onEventId, onEventTitle, suc
             )}
           </div>
         </div>
+        {reviewPopup && (
+          <div className="review-popup">
+            <div className="review-popup-content">
+              <h2 className="review-popup-title">Share Your Opinion!</h2>
+              <form className="review-form" onSubmit={handleReviewSubmit}>
+                <div className="review-form-body">
+                  <label htmlFor="review">
+                    Share your thoughts on your experience so far with this platform! All opinions will be taken into consideration to improve the platform
+                  </label>
+                  <textarea
+                    id="review"
+                    value={reviewBody}
+                    onChange={(e) => handleReviewBodyChange(e.target.value)}
+                    required
+                  />
+                </div>
+              </form>
+              <div className="review-popup-buttons">
+                <button className="review-popup-button" onClick={handleReviewDecline}>
+                  Not right now
+                </button>
+                <button className="review-popup-button" onClick={handleReviewSubmit}>
+                  Submit
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
