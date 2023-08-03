@@ -1,0 +1,41 @@
+.contact-container {
+  background-color: #f5f5f5;
+  height: 65vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: row;
+  border-radius: 15px;
+}
+
+.header-container {
+  width: 100%;
+  background-color: #f5f5f5;
+  text-align: center;
+  padding: 20px;
+}
+
+.contact-header {
+  margin: 0;
+}
+
+.contact-method {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 20px;
+}
+
+.contact-method-name {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.contact-method-description {
+  font-size: 16px;
+  max-width: 300px;
+}

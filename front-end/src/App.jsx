@@ -4,7 +4,7 @@ import axios from 'axios';
 import Home from './components/home/home';
 import Services from './components/services';
 import About from './components/about';
-import Contact from './components/contact';
+import Contact from './components/contact/contact';
 import Navigation from './components/navigation/navigation';
 import SignUp from './components/login/signup';
 import Login from './components/login/login';
@@ -13,6 +13,7 @@ import Footer from './components/footer/footer';
 import Event from './components/event/event'
 import Creator from './components/creator/creator';
 import UserEvents from './components/userEvents/userEvents';
+import Landing from './components/landing/landing';
 
 const App = () => {
   const [data, setData] = useState([]);
@@ -132,7 +133,8 @@ const App = () => {
         userId={userId}
       />
       <Routes>
-        <Route exact path='/' element={<Home filterDataByCategory={filterDataByCategory} filteredData={filteredData} onEventId={handleEventId} onEventTitle={handleEventTitle} successMessage={successMessage} deleteMessage={deleteMessage} loginMessage={loginMessage} setLoginMessage={setLoginMessage} reviewPopup={reviewPopup} setReviewPopup={setReviewPopup} name={name} eventId={eventId} userId={userId} setReviewerStatus={setReviewerStatus}/>} />
+        <Route exact path='/' element={<Landing />} />
+        <Route path='/home' element={<Home filterDataByCategory={filterDataByCategory} filteredData={filteredData} onEventId={handleEventId} onEventTitle={handleEventTitle} successMessage={successMessage} deleteMessage={deleteMessage} loginMessage={loginMessage} setLoginMessage={setLoginMessage} reviewPopup={reviewPopup} setReviewPopup={setReviewPopup} name={name} eventId={eventId} userId={userId} setReviewerStatus={setReviewerStatus}/>} />
         <Route path='/services' element={<Services />} />
         <Route path='/about' element={<About />} />
         <Route path='/contact' element={<Contact />} />

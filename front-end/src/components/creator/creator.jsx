@@ -312,7 +312,7 @@ const Creator = ({username, user_id}) => {
           </div>
         </div>
         <div className={`form-group ${error ? 'error' : ''}`}>
-          <label htmlFor="price">Price</label>
+          <label htmlFor="price">Participation Fee</label>
           <input
             type="number"
             id="price"

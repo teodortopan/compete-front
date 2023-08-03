@@ -8,21 +8,22 @@ const Footer = () => {
             <h1 className="website-name">Compete.</h1>
             <ul className="footer-links">
               <li>
-                <a href="/services">Services</a>
+                <a className='link-name' href="/services">Services</a>
               </li>
               <li>
-                <a href="/about">About</a>
+                <a className='link-name' href="/about">About</a>
               </li>
               <li>
-                <a href="/contact">Contact</a>
+                <a className='link-name' href="/contact">Contact</a>
               </li>
             </ul>
           </div>
+          <p className='copyright-company-text'>&copy; {new Date().getFullYear()} Compete. All rights reserved.</p>
           <div className="footer-right">
-            <form className="newsletter-form">
+            {/* <form className="newsletter-form">
               <input type="email" placeholder="Enter your email" />
               <button type="submit">Subscribe</button>
-            </form>
+            </form> */}
           </div>
         </div>
       </footer>

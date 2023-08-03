@@ -27,7 +27,7 @@ const Event = ({ eventId, eventTitle, userId, name, phoneNumber, setSuccessMessa
     return <div>Loading...</div>;
   }
 
-  const { title, description, organizer, location, event_time, date, price, images, user_id } = eventData;
+  const { title, description, organizer, location, event_time, date, price, images, user_id, participants } = eventData;
 
   const handlePopup = () => {
     setConfirmationPopup(true);
@@ -96,6 +96,10 @@ const Event = ({ eventId, eventTitle, userId, name, phoneNumber, setSuccessMessa
           <p className="individual-time">Event Time: {event_time}</p>
           <p className="individual-date">Date: {date.substring(0, 10)}</p>
           <p className="individual-price">Participation fee: {price}$</p>
+          <h3>Participants:</h3>
+          {participants?.map((participant, index) => (
+            <p key={index}>{participant[0].name} / {participant[0].phone_number}</p>
+          ))}
           <button className="individual-delete-button" onClick={handlePopup}>
             Delete Event
           </button>
