@@ -6,11 +6,12 @@ const Contact = () => {
     <>
       <div className="header-container">
         <h1 className="contact-header">Contact us</h1>
+        <div className="divider"></div>
       </div>
       <div className="contact-container">
         <div className="contact-method">
           <h2 className="contact-method-name">By Email</h2>
-          <p className="contact-method-description">Email us at compete.win.achieve@gmail.com and we'll respond before you know it!</p>
+          <p className="contact-method-description">Email us at compete.win.achieve@gmail.com with and questions or feedback and we'll respond before you know it!</p>
         </div>
         <div className="contact-method">
           <h2 className="contact-method-name">By Phone</h2>

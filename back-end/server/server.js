@@ -82,33 +82,37 @@ app.get('/:name/:id', async (req, res) => {
 // Define POST request to post user account data to postgreSQL table
 app.post('/post_user', async (req, res) => {
   try {
-    let { username, email, password, first_name, last_name } = req.body;
+    let { username, email, password, first_name, last_name, phoneNumber } = req.body;
     username = username.toLowerCase(); // Convert username to lowercase
     email = email.toLowerCase(); // Convert email to lowercase
 
     // Check if the username or email already exists in the database
     const checkQuery =
-      'SELECT COUNT(*) FROM user_accounts WHERE LOWER(username) = $1 OR LOWER(email) = $2';
-    const checkResult = await pool.query(checkQuery, [username, email]);
+      'SELECT COUNT(*) FROM user_accounts WHERE LOWER(username) = $1 OR LOWER(email) = $2 OR phone_number = $3';
+    const checkResult = await pool.query(checkQuery, [username, email, phoneNumber]);
     const existingCount = parseInt(checkResult.rows[0].count);
 
     if (existingCount > 0) {
       // User already exists
-      return res.status(400).json({ error: 'Username or email already registered' });
+      return res.status(400).json({ error: 'Username, phone number, or email already registered' });
     }
 
     // Insert data into the user_accounts table
     const insertQuery =
-      'INSERT INTO user_accounts (username, email, password, first_name, last_name) VALUES ($1, $2, $3, $4, $5)';
-    await pool.query(insertQuery, [username, email, password, first_name, last_name]);
+      'INSERT INTO user_accounts (username, email, password, first_name, last_name, phone_number) VALUES ($1, $2, $3, $4, $5, $6)';
+    await pool.query(insertQuery, [username, email, password, first_name, last_name, phoneNumber]);
 
-    res.sendStatus(200); // Send a success response
+    // Generate an authentication token
+    const token = jwt.sign({ username, email }, 'secretKey');
+
+    // Send the token and other user information to the frontend
+    res.status(200).json({ token, username, email, first_name, last_name, phoneNumber });
+
   } catch (err) {
     console.error('Error executing query', err);
     res.status(500).json({ error: 'Server error' });
   }
 });
-
 // Define POST request for user login
 app.post('/login', async (req, res) => {
   try {
@@ -116,14 +120,14 @@ app.post('/login', async (req, res) => {
     const usernameOrEmailLower = usernameOrEmail.toLowerCase(); // Convert input to lowercase
 
     // Query the database to retrieve user account data based on the provided username/email
-    const query = 'SELECT * FROM user_accounts WHERE LOWER(username) = $1 OR LOWER(email) = $1';
-    const result = await pool.query(query, [usernameOrEmailLower]);
+    const query = 'SELECT * FROM user_accounts WHERE LOWER(username) = $1 OR LOWER(email) = $2'; // Use a parameterized query for email
+    const result = await pool.query(query, [usernameOrEmailLower, usernameOrEmailLower]);
 
     if (result.rows.length === 1) {
       const user = result.rows[0];
       if (user.password === password) {
         const token = jwt.sign({ username: user.username }, 'secretKey');
-        res.json({ token, username: user.username, user_id: user.user_id }); // Include user_id in the response
+        res.json({ token, username: user.username, user_id: user.user_id, phone_number: user.phone_number }); // Include user_id in the response
       } else {
         res.sendStatus(401); // Invalid password
       }
@@ -285,14 +289,14 @@ app.post('/review', async (req, res) => {
 app.post('/participate/:id', async (req, res) => {
   try {
     const id = req.params.id;
-    const { name, phoneNumber, userId } = req.body; // Assuming your request contains name and phoneNumber
+    const { name, phoneNumber, username } = req.body; // Assuming your request contains name and phoneNumber
 
     const checkQuery = 'SELECT participants FROM competitions WHERE post_id = $1';
     const checkResult = await pool.query(checkQuery, [id]);
     const participants = checkResult.rows[0]?.participants || [];
 
     // Check if the user is already a participant
-    const isAlreadyParticipant = participants.some((participant) => participant.name.toLowerCase() === name.toLowerCase());
+    const isAlreadyParticipant = participants.some((participant) => participant.username.toLowerCase() === username.toLowerCase());
 
     if (isAlreadyParticipant) {
       // User already exists
@@ -311,9 +315,38 @@ app.post('/participate/:id', async (req, res) => {
 `;
 
 // Execute the query using the pool
-await pool.query(updateQuery, [[{ name, 'phone number': phoneNumber }], id]);
+await pool.query(updateQuery, [[{ name, 'username': username, 'phone_number': phoneNumber }], id]);
 
     res.status(200).json({ message: 'Successfully updated participants' });
+  } catch (err) {
+    console.error('Error executing query', err);
+    res.status(500).json({ error: 'Server error' });
+  }
+});
+
+app.post('/newsletter', async (req, res) => {
+  try {
+    const { passedEmail } = req.body;
+
+    const checkQuery = 'SELECT newsletter_email_list FROM reviews';
+    const checkResult = await pool.query(checkQuery);
+    const existingEmailList = checkResult.rows[0]?.newsletter_email_list || [];
+
+    // Check if the user is already subscribed
+    const isAlreadySubscribed = existingEmailList.some(emailObj => emailObj.email?.toLowerCase() === passedEmail?.toLowerCase());
+
+    if (isAlreadySubscribed) {
+      return res.status(400).json({ error: 'You are already subscribed!' });
+    }
+
+    // Update the email list in the database
+    const updateQuery = `
+      UPDATE reviews
+      SET newsletter_email_list = newsletter_email_list || $1`;
+
+    await pool.query(updateQuery, [[{ email: passedEmail }]]);
+
+    res.status(200).json({ message: 'Successfully updated newsletter email list' });
   } catch (err) {
     console.error('Error executing query', err);
     res.status(500).json({ error: 'Server error' });

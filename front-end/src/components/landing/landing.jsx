@@ -11,7 +11,7 @@ const Landing = () => {
         <p className="saas-landing-description">
           Discover competitions near you and showcase your skills to win awards and recognition.
         </p>
-        <a href="/home" className="saas-landing-button">Get Started</a>
+        <a href="/login" className="saas-landing-button">Get Started</a>
       </div>
     </div>
   );

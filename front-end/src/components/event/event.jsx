@@ -3,9 +3,10 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import './event.css';
 
-const Event = ({ eventId, eventTitle, userId, name, phoneNumber, setSuccessMessage, setDeleteMessage, setReviewPopup, reviewerStatus }) => {
+const Event = ({ eventId, eventTitle, userId, name, phoneNumber, setSuccessMessage, setDeleteMessage, setReviewPopup, reviewerStatus, username, eventData, setEventData, data, setData }) => {
   const navigate = useNavigate();
-  const [eventData, setEventData] = useState('');
+  console.log(name)
+  // const [eventData, setEventData] = useState([]);
   const [showConfirmationPopup, setConfirmationPopup] = useState(false);
   const [error, setError] = useState('');
   console.log({ userId });
@@ -23,12 +24,12 @@ const Event = ({ eventId, eventTitle, userId, name, phoneNumber, setSuccessMessa
     getEventData();
   }, [eventTitle]);
 
-  if (!eventData) {
-    return <div>Loading...</div>;
+  if (eventData === null) {
+    return <div></div>;
   }
 
   const { title, description, organizer, location, event_time, date, price, images, user_id, participants } = eventData;
-
+  console.log(participants)
   const handlePopup = () => {
     setConfirmationPopup(true);
   };
@@ -38,14 +39,16 @@ const Event = ({ eventId, eventTitle, userId, name, phoneNumber, setSuccessMessa
       const response = await axios.post(`http://localhost:3000/participate/${eventId}`, {
         name: name,
         phoneNumber: phoneNumber,
-        userId: userId,
+        username: username,
       });
 
       if (response.status === 200) {
         setConfirmationPopup(false);
-        navigate('/');
+        navigate('/home');
         handleParticipation()
-        setReviewPopup(true)
+        if(localStorage.getItem('reviewerStatus') === false) {
+          setReviewPopup(true)
+        }
         setSuccessMessage(`Successfully registered for ${title}!`);
         setTimeout(() => {
           setSuccessMessage('');
@@ -74,11 +77,15 @@ const Event = ({ eventId, eventTitle, userId, name, phoneNumber, setSuccessMessa
   const handleDelete = async () => {
     try {
       await axios.post(`http://localhost:3000/event/${eventTitle}/${eventId}/delete`);
-      navigate('/');
+      setData(data => data.filter(event => event.post_id !== eventId));
+
       setDeleteMessage(`Successfully deleted ${title}!`);
       setTimeout(() => {
         setDeleteMessage('');
       }, 3000);
+
+      navigate('/home');
+      // window.location.reload()
     } catch (error) {
       setError('An error occurred while deleting the event.');
     }
@@ -98,7 +105,7 @@ const Event = ({ eventId, eventTitle, userId, name, phoneNumber, setSuccessMessa
           <p className="individual-price">Participation fee: {price}$</p>
           <h3>Participants:</h3>
           {participants?.map((participant, index) => (
-            <p key={index}>{participant[0].name} / {participant[0].phone_number}</p>
+            <p key={index}>{participant.name} / {participant.phone_number}</p>
           ))}
           <button className="individual-delete-button" onClick={handlePopup}>
             Delete Event
@@ -134,7 +141,7 @@ const Event = ({ eventId, eventTitle, userId, name, phoneNumber, setSuccessMessa
         <p className="individual-organizer">Organizer: {organizer}</p>
         <p className="individual-location">Location: {location}</p>
         <p className="individual-time">Event Time: {event_time}</p>
-        <p className="individual-date">Date: {date.substring(0, 10)}</p>
+        <p className="individual-date">Date: {date?.substring(0, 10)}</p>
         <p className="individual-price">Price: {price}$</p>
         {error && <p className="error-registration-message">You are already registered for this event!</p>}
         <button className="individual-button" onClick={handlePopup}>

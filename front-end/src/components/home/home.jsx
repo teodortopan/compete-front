@@ -4,7 +4,7 @@ import './home.css';
 import Footer from '../footer/footer';
 import { useNavigate, Link } from 'react-router-dom';
 
-const Home = ({ filterDataByCategory, filteredData, onEventId, onEventTitle, successMessage, deleteMessage, reviewPopup, setReviewPopup, name, userId}) => {
+const Home = ({ filterDataByCategory, filteredData, onEventId, onEventTitle, successMessage, deleteMessage, reviewPopup, setReviewPopup, name, userId, reviewerStatus}) => {
   const navigate = useNavigate();
   const [currentPage, setCurrentPage] = useState(1);
   const [reviewBody, setReviewBody] = useState('')
@@ -14,7 +14,7 @@ const Home = ({ filterDataByCategory, filteredData, onEventId, onEventTitle, suc
   const eventId = localStorage.getItem('eventId')
   const eventsPerPage = 9;
   const handleEventClick = (id, title) => {
-    const token = localStorage.getItem('token');
+    const token = sessionStorage.getItem('token');
 
     if (token) {
       localStorage.setItem('eventTitle', title);

@@ -14,6 +14,10 @@ const Login = ({handleLogin, setEmail, setLoginMessage, setUserId}) => {
     setError('');
 
     try {
+      if (!validateEmail(usernameOrEmail)) {
+        setError('Invalid email format. Please enter a valid email address.');
+        return;
+      }
       const response = await axios.post('http://localhost:3000/login', {
         usernameOrEmail,
         password,
@@ -22,8 +26,8 @@ const Login = ({handleLogin, setEmail, setLoginMessage, setUserId}) => {
       
       if (response.status === 200) {
         console.log(response.data)
-        localStorage.setItem('token', response.data.token)
-        localStorage.setItem('username', response.data.username);
+        sessionStorage.setItem('token', response.data.token)
+        sessionStorage.setItem('username', response.data.username);
         console.log('Token:', response.data.token);
         console.log('Username:', response.data.username);
         setEmail(usernameOrEmail)
@@ -39,6 +43,7 @@ const Login = ({handleLogin, setEmail, setLoginMessage, setUserId}) => {
         
         setTimeout(() => {
           setLoginMessage('')
+          window.location.reload()
         }, 2500)
       } else {
         // Invalid username/email or password
@@ -50,17 +55,24 @@ const Login = ({handleLogin, setEmail, setLoginMessage, setUserId}) => {
     }
   };
 
+  const validateEmail = (email) => {
+    const emailRegex = /^\S+@\S+\.\S+$/;
+    return emailRegex.test(email);
+  };
+
   return (
     <div className="container-login">
       <form className="login-form" onSubmit={handleSubmit}>
         <h2>Login</h2>
         <div className={`form-group ${error && 'error'}`}>
-          <label htmlFor="usernameOrEmail">Email</label>
+          <label htmlFor="email">Email</label>
           <input
             type="text"
-            id="usernameOrEmail"
+            id="email"
             value={usernameOrEmail}
-            onChange={(e) => setUsernameOrEmail(e.target.value)} required
+            onChange={(e) => setUsernameOrEmail(e.target.value)} 
+            required
+            placeholder='Log in using the email address signed up with'
           />
         </div>
         <div className={`form-group ${error && 'error'}`}>
@@ -72,7 +84,7 @@ const Login = ({handleLogin, setEmail, setLoginMessage, setUserId}) => {
             onChange={(e) => setPassword(e.target.value)} required
           />
         </div>
-        {error && <p className="error-message">Login failed. Please check your username or email and password and try again</p>}
+        {error && <p className="error-message">Login failed. Please check your email, password and try again</p>}
         <button type="submit" className="login-button">
           Login
         </button>

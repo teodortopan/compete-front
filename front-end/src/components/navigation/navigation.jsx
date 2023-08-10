@@ -29,11 +29,11 @@ const Navigation = ({ filterDataByCategory, setSearchText, isAuthenticated, user
       <Navbar.Toggle aria-controls="basic-navbar-nav" />
       <Navbar.Collapse id="basic-navbar-nav">
         <Nav className="mr-auto">
-          <Nav.Item>
+          {/* <Nav.Item>
             <Nav.Link as={Link} to="/services" className="nav-link">
               Services
             </Nav.Link>
-          </Nav.Item>
+          </Nav.Item> */}
           <Nav.Item>
             <Nav.Link as={Link} to="/about" className="nav-link">
               About
@@ -57,24 +57,24 @@ const Navigation = ({ filterDataByCategory, setSearchText, isAuthenticated, user
         <Nav style={{ marginLeft: '25rem', display: 'flex', alignItems: 'center'}}>
           {isAuthenticated ? (
             <>
-            <Nav.Item style={{marginRight: '20px'}}>
+            <Nav.Item style={{marginRight: '30px'}}>
               <Nav.Link as={Link} to={`/user/${username}/${userId}/events`} className="nav-link">
                 Created & Registered Events
               </Nav.Link>
             </Nav.Item>
-            <Nav.Item style={{marginRight: '20px'}}>
+            <Nav.Item style={{marginRight: '30px'}}>
               <Nav.Link as={Link} to="/creator" className="nav-link">
                 Create Event
               </Nav.Link>
             </Nav.Item>
-            <Nav.Item style={{marginRight: '20px'}}>
+            <Nav.Item style={{marginRight: '30px'}}>
               <Nav.Link as={Link} to={`/user/${username}`} className="nav-link">
-                Currently logged in as: {username}
+                Logged in as: {username}
               </Nav.Link>
             </Nav.Item>
             </>
           ) : (
-            <Nav.Item>
+            <Nav.Item style={{flexWrap: 'wrap', paddingBottom: '13px', paddingTop: '13px'}}>
               <Nav.Link as={Link} to="/login" className="nav-link">
                 Log In
               </Nav.Link>

@@ -18,7 +18,7 @@ const Creator = ({username, user_id}) => {
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
+    e?.preventDefault();
     setError('');
 
     try {
@@ -46,7 +46,7 @@ const Creator = ({username, user_id}) => {
       setCategories([]);
       setPrice('');
 
-      navigate('/');
+      navigate('/home');
 
       window.location.reload();
     } catch (error) {
@@ -69,21 +69,25 @@ const Creator = ({username, user_id}) => {
   const handleEventCreation = () => {
     if (
       title !== '' &&
-      description !== '' &&
       organizer !== '' &&
       location !== '' &&
       date !== '' &&
       time !== '' &&
-      images !== '' &&
       categories.length > 0 &&
       price !== ''
     ) {
-      setShowPopup(true);
+      console.log('showing popup')
+      handleConfirmation()
     } else {
       // Show required field error
       setError('Please fill out all required fields');
     }
   };
+
+  const handleConfirmation = () => {
+    setShowPopup(true)
+  }
+
   const handleConfirm = () => {
     handleSubmit()
     setShowPopup(false);
@@ -127,6 +131,7 @@ const Creator = ({username, user_id}) => {
             id="description"
             value={description}
             onChange={(e) => setDescription(e.target.value)}
+            placeholder="Enter any information the participant ought to know about the event or it's organization, such as how to pay the participation fee (if applicable), how to contact the organizer, what to expect, etc..."
           ></textarea>
         </div>
         <div className={`form-group ${error ? 'error' : ''}`}>
@@ -148,6 +153,7 @@ const Creator = ({username, user_id}) => {
             value={location}
             onChange={(e) => setLocation(e.target.value)}
             required
+            placeholder='Enter a valid address (if applicable)'
           />
         </div>
         <div className={`form-group ${error ? 'error' : ''}`}>
@@ -177,7 +183,6 @@ const Creator = ({username, user_id}) => {
             id="images"
             value={images.URL}
             onChange={(e) => handleImageChange(e)}
-            required
           />
         </div>
         <div className={`form-group ${error ? 'error' : ''}`}>
@@ -319,9 +324,11 @@ const Creator = ({username, user_id}) => {
             value={price}
             onChange={(e) => setPrice(e.target.value)}
             required
+            placeholder='Enter the value of the participation fee for this event (if any)'
+            min={0}
           />
         </div>
-        <button type="submit" className="creator-button" onClick={handleEventCreation}>
+        <button type="button" className="creator-button" onClick={handleEventCreation}>
           Create Event
         </button>
       </form>
@@ -331,7 +338,7 @@ const Creator = ({username, user_id}) => {
             <h2 className="popup-title">Confirmation</h2>
             <p className="popup-message">Are you sure you want to create this event?</p>
             <div className="popup-buttons">
-              <button className="popup-button" onClick={handleConfirm}>
+              <button type="submit" className="popup-button" onClick={handleConfirm}>
                 Yes
               </button>
               <button className="popup-button" onClick={handleCancel}>

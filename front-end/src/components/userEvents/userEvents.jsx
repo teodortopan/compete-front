@@ -4,12 +4,20 @@ import Footer from '../footer/footer';
 import './userEvents.css'
 import { useNavigate, Link } from 'react-router-dom';
 
-const UserEvents = ({ userId }) => {
-  const storedName = localStorage.getItem('name')
+const UserEvents = ({ userId, onEventId, onEventTitle, userEventData, setUserEventData }) => {
+  const storedName = sessionStorage.getItem('name')
   const navigate = useNavigate();
-  const [userEventData, setUserEventData] = useState(null)
+  // const [userEventData, setUserEventData] = useState(null)
   const [currentPage, setCurrentPage] = useState(1);
   const eventsPerPage = 8;
+
+  const handleEventClick = (id, title) => {
+    localStorage.setItem('eventTitle', title);
+    localStorage.setItem('eventId', id);
+    onEventId(id);
+    onEventTitle(title);
+    navigate(`/event/${title}/${id}`);
+  }
   
   const handlePageChange = (page) => {
     setCurrentPage(page);
@@ -32,7 +40,7 @@ const UserEvents = ({ userId }) => {
   }, [storedName, userId]);
 
   if (userEventData === null || !storedName) {
-    return <div>Loading...</div>;
+    return <div></div>;
   }
   
   if (userEventData.length === 0) {

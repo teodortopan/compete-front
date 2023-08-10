@@ -1,0 +1,28 @@
+.about-header-container {
+  text-align: center;
+  margin-bottom: 149.6px;
+}
+
+.about-header {
+  font-size: 43px;
+  margin: 20px 0;
+}
+
+.divider {
+  width: 300px;
+  height: 4px;
+  background-color: #000;
+  margin: 10px auto;
+}
+
+.about-container {
+  max-width: 900px; /* Adjust the maximum width as needed */
+  margin: 0 auto; /* Center the container horizontally */
+  text-align: center; /* Center the text within the container */
+  padding: 20px; /* Add padding to create rounded corners */
+}
+
+.about-us {
+  margin-top: 20px;
+  font-size: 22px;
+}
