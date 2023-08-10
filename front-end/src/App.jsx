@@ -35,6 +35,7 @@ const App = () => {
   const [userData, setUserData] = useState(null);
   const [userEventData, setUserEventData] = useState(null)
   const [eventData, setEventData] = useState([]);
+  
   useEffect(() => {
     // Check if the user is authenticated
     const token = sessionStorage.getItem('token'); // Get the session token or JWT from local storage

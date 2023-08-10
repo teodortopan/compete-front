@@ -105,7 +105,7 @@ const Event = ({ eventId, eventTitle, userId, name, phoneNumber, setSuccessMessa
           <p className="individual-price">Participation fee: {price}$</p>
           <h3>Participants:</h3>
           {participants?.map((participant, index) => (
-            <p key={index}>{participant.name} / {participant.phone_number}</p>
+            <p key={index}>{participant.name} / {participant.phone_number.substring(0,3) + '-' + participant.phone_number.substring(3,6) + '-' + participant.phone_number.substring(6,10)}</p>
           ))}
           <button className="individual-delete-button" onClick={handlePopup}>
             Delete Event

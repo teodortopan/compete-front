@@ -1,6 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const { Pool } = require('pg');
+const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const fileUpload = require('express-fileupload');
 const multer = require('multer');
@@ -11,6 +12,7 @@ const dbHost = process.env.PSQL_HOST;
 const dbDatabase = process.env.PSQL_DB;
 const dbPassword = process.env.PSQL_PASSWORD;
 const dbPort = process.env.PSQL_PORT;
+const secretKey = process.env.JWT_SECRET_KEY;
 // Create postgre authentication object
 const pool = new Pool({
   user: dbUser,
@@ -83,13 +85,13 @@ app.get('/:name/:id', async (req, res) => {
 app.post('/post_user', async (req, res) => {
   try {
     let { username, email, password, first_name, last_name, phoneNumber } = req.body;
-    username = username.toLowerCase(); // Convert username to lowercase
+    lowerUsername = username.toLowerCase(); // Convert username to lowercase
     email = email.toLowerCase(); // Convert email to lowercase
-
+    const hashedPassword = await bcrypt.hash(password, 10);
     // Check if the username or email already exists in the database
     const checkQuery =
       'SELECT COUNT(*) FROM user_accounts WHERE LOWER(username) = $1 OR LOWER(email) = $2 OR phone_number = $3';
-    const checkResult = await pool.query(checkQuery, [username, email, phoneNumber]);
+    const checkResult = await pool.query(checkQuery, [lowerUsername, email, phoneNumber]);
     const existingCount = parseInt(checkResult.rows[0].count);
 
     if (existingCount > 0) {
@@ -100,10 +102,10 @@ app.post('/post_user', async (req, res) => {
     // Insert data into the user_accounts table
     const insertQuery =
       'INSERT INTO user_accounts (username, email, password, first_name, last_name, phone_number) VALUES ($1, $2, $3, $4, $5, $6)';
-    await pool.query(insertQuery, [username, email, password, first_name, last_name, phoneNumber]);
+    await pool.query(insertQuery, [username, email, hashedPassword, first_name, last_name, phoneNumber]);
 
     // Generate an authentication token
-    const token = jwt.sign({ username, email }, 'secretKey');
+    const token = jwt.sign({ username, email }, secretKey);
 
     // Send the token and other user information to the frontend
     res.status(200).json({ token, username, email, first_name, last_name, phoneNumber });
@@ -125,8 +127,10 @@ app.post('/login', async (req, res) => {
 
     if (result.rows.length === 1) {
       const user = result.rows[0];
-      if (user.password === password) {
-        const token = jwt.sign({ username: user.username }, 'secretKey');
+      const isPasswordCorrect = await bcrypt.compare(password, user.password);
+
+      if (isPasswordCorrect) {
+        const token = jwt.sign({ username: user.username }, secretKey);
         res.json({ token, username: user.username, user_id: user.user_id, phone_number: user.phone_number }); // Include user_id in the response
       } else {
         res.sendStatus(401); // Invalid password

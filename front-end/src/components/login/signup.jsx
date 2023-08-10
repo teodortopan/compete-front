@@ -110,14 +110,14 @@ const SignUp = () => {
         <div className={`form-group ${error ? 'error' : ''}`}>
           <label htmlFor="phoneNumber">Phone Number</label>
           <input
-            type="text"
+            type="tel"
             id="phoneNumber"
             value={phoneNumber}
             onChange={(e) => setPhoneNumber(e.target.value)}
-            pattern="^\d{3}-\d{3}-\d{4}$" // Add pattern validation for disallowing spaces
-            title="Please enter a phone number in the format '000-000-0000'"
+            pattern="^\d{10}$" // Add pattern validation for 10 digits
+            title="Please enter a 10-digit phone number"
             required // Add required attribute
-            placeholder='Enter phone number in the form XXX-XXX-XXXX'
+            placeholder='Enter phone number (XXXXXXXXXX)'
           />
         </div>
         <button type="submit" className="signup-button">

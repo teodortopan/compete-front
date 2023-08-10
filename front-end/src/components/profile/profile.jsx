@@ -79,8 +79,8 @@ const Profile = ({ username, setLoginMessage, loginMessage, setUserId, userData,
           style={{
             backgroundImage: `url(${userData.profile_picture || profilePicture})`,
           }}
-          onMouseEnter={() => setIsHovered(true)}
-          onMouseLeave={() => setIsHovered(false)}
+          // onMouseEnter={() => setIsHovered(true)}
+          // onMouseLeave={() => setIsHovered(false)}
         >
           {/* {isHovered && (
             <>
@@ -108,7 +108,7 @@ const Profile = ({ username, setLoginMessage, loginMessage, setUserId, userData,
         <strong>Email:</strong> {userData.email}
       </p>
       <p className="profile-phone-number">
-        <strong>Phone Number:</strong> {userData.phone_number}
+        <strong>Phone Number:</strong> {userData.phone_number.substring(0,3) + '-' + userData.phone_number.substring(3,6) + '-' + userData.phone_number.substring(6,10)}
       </p>
       <button className="profile-button" onClick={logOut}>
         Log Out
