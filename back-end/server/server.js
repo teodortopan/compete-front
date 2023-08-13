@@ -87,7 +87,6 @@ app.post('/post_user', async (req, res) => {
     let { username, email, password, first_name, last_name, phoneNumber } = req.body;
     lowerUsername = username.toLowerCase(); // Convert username to lowercase
     email = email.toLowerCase(); // Convert email to lowercase
-    const hashedPassword = await bcrypt.hash(password, 10);
     // Check if the username or email already exists in the database
     const checkQuery =
       'SELECT COUNT(*) FROM user_accounts WHERE LOWER(username) = $1 OR LOWER(email) = $2 OR phone_number = $3';
@@ -102,7 +101,7 @@ app.post('/post_user', async (req, res) => {
     // Insert data into the user_accounts table
     const insertQuery =
       'INSERT INTO user_accounts (username, email, password, first_name, last_name, phone_number) VALUES ($1, $2, $3, $4, $5, $6)';
-    await pool.query(insertQuery, [username, email, hashedPassword, first_name, last_name, phoneNumber]);
+    await pool.query(insertQuery, [username, email, password, first_name, last_name, phoneNumber]);
 
     // Generate an authentication token
     const token = jwt.sign({ username, email }, secretKey);
@@ -127,9 +126,7 @@ app.post('/login', async (req, res) => {
 
     if (result.rows.length === 1) {
       const user = result.rows[0];
-      const isPasswordCorrect = await bcrypt.compare(password, user.password);
-
-      if (isPasswordCorrect) {
+      if (password === user.password) {
         const token = jwt.sign({ username: user.username }, secretKey);
         res.json({ token, username: user.username, user_id: user.user_id, phone_number: user.phone_number }); // Include user_id in the response
       } else {
