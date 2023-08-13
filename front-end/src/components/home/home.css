@@ -302,3 +302,15 @@
 li {
   list-style-type: none;
 }
+
+.category-item.selected {
+  opacity: 0.5; /* Make the selected category fully opaque */ /* Change background color to indicate selection */
+
+}
+
+/* Add a class to highlight category items on hover */
+.category-item:hover {
+  opacity: 0.5; /* Reduce opacity on hover to provide visual feedback */
+  cursor: pointer;
+  transition: 0.15s;
+}

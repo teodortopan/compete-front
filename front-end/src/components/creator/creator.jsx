@@ -16,6 +16,8 @@ const Creator = ({username, user_id}) => {
   const [error, setError] = useState('');
   const [showPopup, setShowPopup] = useState(false);
   const navigate = useNavigate();
+  const categoryArr = ['None', 'Mathematics', 'Chemistry', 'Physics', 'Biology', 'Computer Science', 'Business', 'Athletics', 'Visual/Performing Arts',
+  'Debate', 'Engineering', 'Public/Legal Policy', 'History', 'Geography', 'Trivia']
 
   const handleSubmit = async (e) => {
     e?.preventDefault();
@@ -34,8 +36,6 @@ const Creator = ({username, user_id}) => {
         categories,
         price,
       });
-
-      console.log('Event created successfully:', response.data);
       setTitle('');
       setDescription('');
       setOrganizer('');
@@ -76,7 +76,6 @@ const Creator = ({username, user_id}) => {
       categories.length > 0 &&
       price !== ''
     ) {
-      console.log('showing popup')
       handleConfirmation()
     } else {
       // Show required field error
@@ -153,7 +152,7 @@ const Creator = ({username, user_id}) => {
             value={location}
             onChange={(e) => setLocation(e.target.value)}
             required
-            placeholder='Enter a valid address (if applicable)'
+            placeholder='Enter a valid address, or state that the event is virtual'
           />
         </div>
         <div className={`form-group ${error ? 'error' : ''}`}>
@@ -163,6 +162,7 @@ const Creator = ({username, user_id}) => {
             id="date"
             value={date}
             onChange={(e) => setDate(e.target.value)}
+            min={new Date().toISOString().split('T')[0]}
             required
           />
         </div>
@@ -177,7 +177,7 @@ const Creator = ({username, user_id}) => {
           />
         </div>
         <div className={`form-group ${error ? 'error' : ''}`}>
-          <label htmlFor="images">Images</label>
+          <label htmlFor="images">Image</label>
           <input
             type="file"
             id="images"

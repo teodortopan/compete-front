@@ -24,14 +24,11 @@ const UserEvents = ({ userId, onEventId, onEventTitle, userEventData, setUserEve
   }
   
   useEffect(() => {
-    console.log(userId, storedName)
     const getUserEventData = async () => {
       try {
         const encodedName = encodeURIComponent(storedName)
-        console.log(encodedName)
         const response = await axios.get(`http://localhost:3000/${encodedName}/${userId}`);
         setUserEventData(response.data);
-        console.log(response.data)
       } catch (error) { 
         console.error('Error fetching user-event data:', error);
       }

@@ -5,14 +5,11 @@ import './event.css';
 
 const Event = ({ eventId, eventTitle, userId, name, phoneNumber, setSuccessMessage, setDeleteMessage, setReviewPopup, reviewerStatus, username, eventData, setEventData, data, setData }) => {
   const navigate = useNavigate();
-  console.log(name)
   // const [eventData, setEventData] = useState([]);
   const [showConfirmationPopup, setConfirmationPopup] = useState(false);
   const [error, setError] = useState('');
-  console.log({ userId });
 
   useEffect(() => {
-    console.log(reviewerStatus)
     const getEventData = async () => {
       try {
         const response = await axios.get(`http://localhost:3000/event/${eventTitle}/${eventId}`);
@@ -29,7 +26,6 @@ const Event = ({ eventId, eventTitle, userId, name, phoneNumber, setSuccessMessa
   }
 
   const { title, description, organizer, location, event_time, date, price, images, user_id, participants } = eventData;
-  console.log(participants)
   const handlePopup = () => {
     setConfirmationPopup(true);
   };
@@ -64,7 +60,6 @@ const Event = ({ eventId, eventTitle, userId, name, phoneNumber, setSuccessMessa
   };
 
   const handleParticipation = () => {
-    console.log(reviewerStatus)
     if(reviewerStatus == false) {
       setReviewPopup(true)
     }
@@ -105,7 +100,7 @@ const Event = ({ eventId, eventTitle, userId, name, phoneNumber, setSuccessMessa
           <p className="individual-price">Participation fee: {price}$</p>
           <h3>Participants:</h3>
           {participants?.map((participant, index) => (
-            <p key={index}>{participant.name} / {participant.phone_number.substring(0,3) + '-' + participant.phone_number.substring(3,6) + '-' + participant.phone_number.substring(6,10)}</p>
+            <p key={index}>{participant.name} / {participant.phone_number?.substring(0,3) + '-' + participant.phone_number?.substring(3,6) + '-' + participant.phone_number?.substring(6,10)}</p>
           ))}
           <button className="individual-delete-button" onClick={handlePopup}>
             Delete Event

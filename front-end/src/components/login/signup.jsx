@@ -26,8 +26,6 @@ const SignUp = () => {
         last_name: lastName,
         phoneNumber: phoneNumber
       });
-
-      console.log('User created successfully:', response.data);
       setFirstName('');
       setLastName('');
       setEmail('');
@@ -79,7 +77,7 @@ const SignUp = () => {
             title="Spaces are not allowed"
             autoComplete="false"
             required // Add required attribute
-            placeholder='Create a (permanent) unique username'
+            placeholder='Create a (permanent) username'
           />
         </div>
         <div className={`form-group ${error ? 'error' : ''}`}>
@@ -92,7 +90,8 @@ const SignUp = () => {
             onChange={(e) => setEmail(e.target.value)}
             autoComplete="false"
             required // Add required attribute
-            placeholder='Enter your preferred email address for contact'
+            placeholder='Enter your email address (will be used for login)'
+            autoSave='on'
           />
         </div>
         <div className={`form-group ${error ? 'error' : ''}`}>

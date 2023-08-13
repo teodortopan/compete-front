@@ -4,7 +4,7 @@ import './home.css';
 import Footer from '../footer/footer';
 import { useNavigate, Link } from 'react-router-dom';
 
-const Home = ({ filterDataByCategory, filteredData, onEventId, onEventTitle, successMessage, deleteMessage, reviewPopup, setReviewPopup, name, userId, reviewerStatus}) => {
+const Home = ({ filterDataByCategory, filteredData, onEventId, onEventTitle, successMessage, deleteMessage, reviewPopup, setReviewPopup, name, userId, reviewerStatus, selectedCategory}) => {
   const navigate = useNavigate();
   const [currentPage, setCurrentPage] = useState(1);
   const [reviewBody, setReviewBody] = useState('')
@@ -13,6 +13,8 @@ const Home = ({ filterDataByCategory, filteredData, onEventId, onEventTitle, suc
   const [error, setError] = useState('');
   const eventId = localStorage.getItem('eventId')
   const eventsPerPage = 9;
+  const categories = ['None', 'Mathematics', 'Chemistry', 'Physics', 'Biology', 'Computer Science', 'Business', 'Athletics', 'Visual/Performing Arts',
+  'Debate', 'Engineering', 'Public/Legal Policy', 'History', 'Geography', 'Trivia']
   const handleEventClick = (id, title) => {
     const token = sessionStorage.getItem('token');
 
@@ -21,8 +23,6 @@ const Home = ({ filterDataByCategory, filteredData, onEventId, onEventTitle, suc
       localStorage.setItem('eventId', id);
       onEventId(id);
       onEventTitle(title);
-      console.log(id);
-      console.log(title);
       navigate(`/event/${title}/${id}`);
     } else {
       navigate('/login');
@@ -54,7 +54,6 @@ const Home = ({ filterDataByCategory, filteredData, onEventId, onEventTitle, suc
     setError('');
 
     try {
-      console.log(reviewBody)
       // const response = await axios.post(`http://localhost:3000/review/${eventId}`, {
       //   name,
       //   review: reviewBody,
@@ -65,7 +64,6 @@ const Home = ({ filterDataByCategory, filteredData, onEventId, onEventTitle, suc
         id: userId,
       })
       if(response.status == 200) {
-        console.log(response.data)
         setReviewPopup(false)
         localStorage.setItem('reviewerStatus', true)
         window.location.reload()
@@ -112,51 +110,9 @@ const Home = ({ filterDataByCategory, filteredData, onEventId, onEventTitle, suc
           </select>
         </div>
         <ul className="category-list">
-          <li onClick={() => filterDataByCategory('')} className="category-item">
-            None
-          </li>
-          <li onClick={() => filterDataByCategory('Mathematics')} className="category-item">
-            Mathematics
-          </li>
-          <li onClick={() => filterDataByCategory('Chemistry')} className="category-item">
-            Chemistry
-          </li>
-          <li onClick={() => filterDataByCategory('Physics')} className="category-item">
-            Physics
-          </li>
-          <li onClick={() => filterDataByCategory('Biology')} className="category-item">
-            Biology
-          </li>
-          <li onClick={() => filterDataByCategory('Computer Science')} className="category-item">
-            Computer Science
-          </li>
-          <li onClick={() => filterDataByCategory('Business')} className="category-item">
-            Business
-          </li>
-          <li onClick={() => filterDataByCategory('Athletics')} className="category-item">
-            Athletics
-          </li>
-          <li onClick={() => filterDataByCategory('Visual/Performing Arts')} className="category-item">
-            Visual/Performing Arts
-          </li>
-          <li onClick={() => filterDataByCategory('Debate')} className="category-item">
-            Debate
-          </li>
-          <li onClick={() => filterDataByCategory('Engineering')} className="category-item">
-            Engineering
-          </li>
-          <li onClick={() => filterDataByCategory('Public/Legal Policy')} className="category-item">
-            Public/Legal Policy
-          </li>
-          <li onClick={() => filterDataByCategory('History')} className="category-item">
-            History
-          </li>
-          <li onClick={() => filterDataByCategory('Geography')} className="category-item">
-            Geography
-          </li>
-          <li onClick={() => filterDataByCategory('Trivia')} className="category-item">
-            Trivia
-          </li>
+          {categories.map((category) => (
+            <li onClick={() => filterDataByCategory(`${category}`)} key={category} className={`category-item ${category === selectedCategory ? 'selected' : ''}`}>{category}</li>
+            ))}
         </ul>
       </div>
       <div className="content">

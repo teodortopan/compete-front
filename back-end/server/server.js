@@ -273,14 +273,9 @@ app.post('/post_competitions', async (req, res) => {
 app.post('/review', async (req, res) => {
   try {
     const {name, review, id} = req.body
-
-    console.log('Received name:', name);
-    console.log('Received review:', review);
-    console.log('Received id:', id);
     
     // Insert data into the users table
     const query = 'UPDATE reviews SET general_reviews = general_reviews || $1';
-    console.log(review)
     await pool.query(query, [[{ name, review, id }]]);
 
     res.json(200) // Send a success response
@@ -359,5 +354,4 @@ app.post('/newsletter', async (req, res) => {
 
 const port = 3000
 app.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
 });

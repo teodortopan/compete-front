@@ -18,10 +18,6 @@ const Footer = ({userData, userEventData, eventData}) => {
       const response = await axios.post('http://localhost:3000/newsletter', {
         passedEmail: newsletterEmail
       })
-
-      if(response.status === 200) {
-        console.log('Succesfully signed up for the newsletter!')
-      }
     } catch (error) {
       console.error('Error signing up for the newsletter:', error);
       setPopupMessage('You are already subscribed to the newsletter!')

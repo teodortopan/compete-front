@@ -46,12 +46,6 @@ const App = () => {
     const storedPhoneNumber = sessionStorage.getItem('phoneNumber')
     const storedName = sessionStorage.getItem('name')
     const storedReviewerStatus = localStorage.getItem('reviewerStatus')
-    console.log('Token from local storage:', token);
-    console.log('Username from local storage:', storedUsername)
-    console.log('user id from local storage:', storedUserId);
-    console.log('name from local storage:', storedName);
-    console.log('phone number from local storage:', storedPhoneNumber);
-    console.log('reviewer status from local storage:', storedReviewerStatus);
     if (token && storedUsername && storedUserId && storedName && storedPhoneNumber) {
       axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
       // User is authenticated
@@ -91,7 +85,6 @@ const App = () => {
 
   const getUsername = async () => {
     try {
-      console.log(email);
       const response = await axios.get('http://localhost:3000/username', { params: { email } });
       setUsername(response.data[0]?.username || 'Username not found');
     } catch (error) {
@@ -101,7 +94,11 @@ const App = () => {
   };
 
   const filterDataByCategory = (category, searchText) => {
-    setSelectedCategory(category);
+    if(category === 'None') {
+      setSelectedCategory('')
+    } else {
+      setSelectedCategory(category);
+    }
     setSearchText(searchText);
   };
 
@@ -111,13 +108,13 @@ today.setDate(today.getDate() - 2); // Subtract 2 days from the current date
 const filteredData = selectedCategory
   ? data.filter(
       (item) =>
-        item.category.includes(selectedCategory) &&
+        item.category?.includes(selectedCategory) &&
         item.title.toLowerCase().includes(searchText?.toLowerCase() || '') &&
         new Date(item.date) >= today // Compare the item's date with today
     )
   : data.filter(
       (item) =>
-        item.title.toLowerCase().includes(searchText?.toLowerCase() || '') &&
+        item.title?.toLowerCase().includes(searchText?.toLowerCase() || '') &&
         new Date(item.date) >= today // Compare the item's date with today
     );
 
@@ -144,7 +141,7 @@ const filteredData = selectedCategory
     />
       <Routes>
         <Route exact path='/' element={<Landing />} />
-        <Route path='/home' element={<Home filterDataByCategory={filterDataByCategory} filteredData={filteredData} onEventId={handleEventId} onEventTitle={handleEventTitle} successMessage={successMessage} deleteMessage={deleteMessage} loginMessage={loginMessage} setLoginMessage={setLoginMessage} reviewPopup={reviewPopup} setReviewPopup={setReviewPopup} name={name} eventId={eventId} userId={userId} reviewerStatus={reviewerStatus}/>} />
+        <Route path='/home' element={<Home filterDataByCategory={filterDataByCategory} filteredData={filteredData} onEventId={handleEventId} onEventTitle={handleEventTitle} successMessage={successMessage} deleteMessage={deleteMessage} loginMessage={loginMessage} setLoginMessage={setLoginMessage} reviewPopup={reviewPopup} setReviewPopup={setReviewPopup} name={name} eventId={eventId} userId={userId} reviewerStatus={reviewerStatus} selectedCategory={selectedCategory}/>} />
         <Route path='/services' element={<Services />} />
         <Route path='/about' element={<About />} />
         <Route path='/contact' element={<Contact />} />

@@ -25,16 +25,12 @@ const Login = ({handleLogin, setEmail, setLoginMessage, setUserId}) => {
 
       
       if (response.status === 200) {
-        console.log(response.data)
         sessionStorage.setItem('token', response.data.token)
         sessionStorage.setItem('username', response.data.username);
-        console.log('Token:', response.data.token);
-        console.log('Username:', response.data.username);
         setEmail(usernameOrEmail)
         handleLogin()
         setLoginMessage(`Successfully logged in as ${response.data.username}!`)
         // Login successful
-        console.log('Login successful!');
         // Clear form fields
         setUsernameOrEmail('');
         setPassword('');
