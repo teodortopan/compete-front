@@ -4,6 +4,7 @@
   "description": "",
   "main": "server.js",
   "scripts": {
+    "start": "node back-end/server/server.js",
     "test": "mocha tests/**/*.js"
   },
   "devDependencies": {
