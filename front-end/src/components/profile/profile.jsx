@@ -11,7 +11,7 @@ const Profile = ({ username, setLoginMessage, loginMessage, setUserId, userData,
   useEffect(() => {
     const getUserData = async () => {
       try {
-        const response = await axios.get(`http://localhost:3000/profile/${username}`);
+        const response = await axios.get(`https://fh0ac22h12.execute-api.us-east-2.amazonaws.com/prod/profile/${username}`);
         setUserData(response.data);
         setUserId(response.data.user_id)
         sessionStorage.setItem('userId', response.data.user_id)

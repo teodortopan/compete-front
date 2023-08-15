@@ -12,7 +12,7 @@ const Event = ({ eventId, eventTitle, userId, name, phoneNumber, setSuccessMessa
   useEffect(() => {
     const getEventData = async () => {
       try {
-        const response = await axios.get(`http://localhost:3000/event/${eventTitle}/${eventId}`);
+        const response = await axios.get(`https://fh0ac22h12.execute-api.us-east-2.amazonaws.com/prod/event/${eventTitle}/${eventId}`);
         setEventData(response.data);
       } catch (error) {
         console.error('Error fetching event data:', error);
@@ -32,7 +32,7 @@ const Event = ({ eventId, eventTitle, userId, name, phoneNumber, setSuccessMessa
 
   const handleConfirm = async () => {
     try {
-      const response = await axios.post(`http://localhost:3000/participate/${eventId}`, {
+      const response = await axios.post(`https://fh0ac22h12.execute-api.us-east-2.amazonaws.com/prod/participate/${eventId}`, {
         name: name,
         phoneNumber: phoneNumber,
         username: username,
@@ -71,7 +71,7 @@ const Event = ({ eventId, eventTitle, userId, name, phoneNumber, setSuccessMessa
 
   const handleDelete = async () => {
     try {
-      await axios.post(`http://localhost:3000/event/${eventTitle}/${eventId}/delete`);
+      await axios.post(`https://fh0ac22h12.execute-api.us-east-2.amazonaws.com/prod/event/${eventTitle}/${eventId}/delete`);
       setData(data => data.filter(event => event.post_id !== eventId));
 
       setDeleteMessage(`Successfully deleted ${title}!`);

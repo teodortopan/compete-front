@@ -27,7 +27,7 @@ const UserEvents = ({ userId, onEventId, onEventTitle, userEventData, setUserEve
     const getUserEventData = async () => {
       try {
         const encodedName = encodeURIComponent(storedName)
-        const response = await axios.get(`http://localhost:3000/${encodedName}/${userId}`);
+        const response = await axios.get(`https://fh0ac22h12.execute-api.us-east-2.amazonaws.com/prod/${encodedName}/${userId}`);
         setUserEventData(response.data);
       } catch (error) { 
         console.error('Error fetching user-event data:', error);

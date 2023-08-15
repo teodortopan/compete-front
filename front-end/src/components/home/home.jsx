@@ -58,7 +58,7 @@ const Home = ({ filterDataByCategory, filteredData, onEventId, onEventTitle, suc
       //   name,
       //   review: reviewBody,
       // })
-      const response = await axios.post(`http://localhost:3000/review`, {
+      const response = await axios.post(`https://fh0ac22h12.execute-api.us-east-2.amazonaws.com/prod/review`, {
         name,
         review: reviewBody,
         id: userId,

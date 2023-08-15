@@ -24,7 +24,7 @@ const Creator = ({username, user_id}) => {
     setError('');
 
     try {
-      const response = await axios.post('http://localhost:3000/post_competitions', {
+      const response = await axios.post('https://fh0ac22h12.execute-api.us-east-2.amazonaws.com/prod/post_competitions', {
         user_id,
         title,
         description,

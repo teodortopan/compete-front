@@ -18,7 +18,7 @@ const Login = ({handleLogin, setEmail, setLoginMessage, setUserId}) => {
         setError('Invalid email format. Please enter a valid email address.');
         return;
       }
-      const response = await axios.post('http://localhost:3000/login', {
+      const response = await axios.post('https://fh0ac22h12.execute-api.us-east-2.amazonaws.com/prod/login', {
         usernameOrEmail,
         password,
       });

@@ -18,7 +18,7 @@ const SignUp = () => {
     setError('');
 
     try {
-      const response = await axios.post('http://localhost:3000/post_user', {
+      const response = await axios.post('https://fh0ac22h12.execute-api.us-east-2.amazonaws.com/prod/post_user', {
         username: username.toLowerCase(),
         email: email.toLowerCase(),
         password: password,

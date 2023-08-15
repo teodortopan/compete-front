@@ -67,7 +67,7 @@ const App = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get('http://localhost:3000/competitions');
+        const response = await axios.get('https://fh0ac22h12.execute-api.us-east-2.amazonaws.com/prod/competitions');
         setData(response.data);
       } catch (error) {
         console.error('Error fetching data:', error);
@@ -85,7 +85,7 @@ const App = () => {
 
   const getUsername = async () => {
     try {
-      const response = await axios.get('http://localhost:3000/username', { params: { email } });
+      const response = await axios.get('https://fh0ac22h12.execute-api.us-east-2.amazonaws.com/prod/username', { params: { email } });
       setUsername(response.data[0]?.username || 'Username not found');
     } catch (error) {
       console.error('Error fetching username:', error);
