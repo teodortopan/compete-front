@@ -4,14 +4,13 @@ import './home.css';
 import Footer from '../footer/footer';
 import { useNavigate, Link } from 'react-router-dom';
 
-const Home = ({ filterDataByCategory, filteredData, onEventId, onEventTitle, successMessage, deleteMessage, reviewPopup, setReviewPopup, name, userId, reviewerStatus, selectedCategory}) => {
+const Home = ({ filterDataByCategory, filteredData, onEventId, onEventTitle, successMessage, deleteMessage, reviewPopup, setReviewPopup, name, userId, selectedCategory, unregisterMessage}) => {
   const navigate = useNavigate();
   const [currentPage, setCurrentPage] = useState(1);
   const [reviewBody, setReviewBody] = useState('')
   const [sortOption, setSortOption] = useState('None');
   const [data, setData] = useState([]);
   const [error, setError] = useState('');
-  const eventId = localStorage.getItem('eventId')
   const eventsPerPage = 9;
   const categories = ['None', 'Mathematics', 'Chemistry', 'Physics', 'Biology', 'Computer Science', 'Business', 'Athletics', 'Visual/Performing Arts',
   'Debate', 'Engineering', 'Public/Legal Policy', 'History', 'Geography', 'Trivia']
@@ -58,7 +57,7 @@ const Home = ({ filterDataByCategory, filteredData, onEventId, onEventTitle, suc
       //   name,
       //   review: reviewBody,
       // })
-      const response = await axios.post(`https://fh0ac22h12.execute-api.us-east-2.amazonaws.com/prod/review`, {
+      const response = await axios.post(`https://us-central1-compete-ce97a.cloudfunctions.net/api/review`, {
         name,
         review: reviewBody,
         id: userId,
@@ -76,6 +75,7 @@ const Home = ({ filterDataByCategory, filteredData, onEventId, onEventTitle, suc
 
   const handleReviewDecline = () => {
     setReviewPopup(false)
+    window.location.reload()
   }
 
   const handleReviewBodyChange = (text) => {
@@ -93,12 +93,34 @@ const Home = ({ filterDataByCategory, filteredData, onEventId, onEventTitle, suc
 
   const totalEvents = data.length;
   const totalPages = Math.ceil(totalEvents / eventsPerPage);
-
-
+  if(currentEvents.length == 0) {
+    return(
+      <div className='container'>
+        <h1 className='no-event-message'>No events currently available. Create one!</h1>
+        <div className="sidebar">
+        <h4>Categories</h4>
+        <div className="sorting-dropdown">
+          <label htmlFor="sortOption">Sort By:</label>
+          <select id="sortOption" value={sortOption} onChange={handleSortChange}>
+            <option value="None">None</option>
+            <option value="PriceLowToHigh">Price Low to High</option>
+            <option value="PriceHighToLow">Price High to Low</option>
+          </select>
+        </div>
+        <ul className="category-list">
+          {categories.map((category) => (
+            <li onClick={() => filterDataByCategory(`${category}`)} key={category} className={`category-item ${category === selectedCategory ? 'selected' : ''}`}>{category}</li>
+            ))}
+        </ul>
+      </div>
+      </div>
+    )
+  }
   return (
     <div className="container">
       {successMessage && <div className="success-banner">{successMessage}</div>}
       {deleteMessage && <div className="delete-banner">{deleteMessage}</div>}
+      {unregisterMessage && <div className="unregister-banner">{unregisterMessage}</div>}
       <div className="sidebar">
         <h4>Categories</h4>
         <div className="sorting-dropdown">
@@ -118,11 +140,11 @@ const Home = ({ filterDataByCategory, filteredData, onEventId, onEventTitle, suc
       <div className="content">
         
           {currentEvents.map((item) => (
-            <div key={item.post_id} className="event-card" onClick={() => handleEventClick(item.post_id, item.title)}>
+            <div key={item.id} className="event-card" onClick={() => handleEventClick(item.id, item.title)}>
               <img className="event-image" src={item.images} alt="Event" />
               <h3 className='event-title'>{item.title}</h3>
               <div className="event-info">
-                <p>Date & Time: {item.date.substring(0, 10) + ' @ ' + item.event_time}</p>
+                <p>Date & Time: {new Date(item.eventTime).toLocaleDateString('en-US', { year: 'numeric', month: '2-digit', day: '2-digit'}) + ' @ ' + new Date(item.eventTime).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true })}</p>
                 <p className={`event-attribute ${item.location.length > 25 ? 'event-description' : ''}`}>Location: {item.location}</p>
                 <p className={`event-attribute ${item.organizer.length > 25 ? 'event-description' : ''}`}>Organizer: {item.organizer}</p>
                 <p>Participation fee: ${item.price}</p>

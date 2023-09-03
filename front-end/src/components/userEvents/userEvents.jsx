@@ -27,7 +27,7 @@ const UserEvents = ({ userId, onEventId, onEventTitle, userEventData, setUserEve
     const getUserEventData = async () => {
       try {
         const encodedName = encodeURIComponent(storedName)
-        const response = await axios.get(`https://fh0ac22h12.execute-api.us-east-2.amazonaws.com/prod/${encodedName}/${userId}`);
+        const response = await axios.get(`https://us-central1-compete-ce97a.cloudfunctions.net/api/${encodedName}/${userId}`);
         setUserEventData(response.data);
       } catch (error) { 
         console.error('Error fetching user-event data:', error);
@@ -37,31 +37,25 @@ const UserEvents = ({ userId, onEventId, onEventTitle, userEventData, setUserEve
   }, [storedName, userId]);
 
   if (userEventData === null || !storedName) {
-    return <div></div>;
+    return <h1 className='no-event-display'>No events found for the user.</h1>;
   }
   
-  if (userEventData.length === 0) {
-    return <div>No events found for the user.</div>;
-  }
-
   const indexOfLastEvent = currentPage * eventsPerPage;
   const indexOfFirstEvent = indexOfLastEvent - eventsPerPage;
   const currentEvents = userEventData.slice(indexOfFirstEvent, indexOfLastEvent);
-
   const totalEvents = userEventData.length;
   const totalPages = Math.ceil(totalEvents / eventsPerPage);
-
 
   return (
     <div className="user-container">
       <div className="user-content">
         
           {currentEvents.map((item) => (
-            <div key={item.post_id} className="user-event-card" onClick={() => handleEventClick(item.post_id, item.title)}>
+            <div key={item.id} className="user-event-card" onClick={() => handleEventClick(item.id, item.title)}>
               <img className="user-event-image" src={item.images} alt="Event" />
               <h3 className='user-event-title'>{item.title}</h3>
               <div className="user-event-info">
-                <p>Date & Time: {item.date?.substring(0, 10) + ' @ ' + item.event_time}</p>
+              <p className='user-event-date'>Date & Time: {new Date(item.eventTime).toLocaleDateString('en-US', { year: 'numeric', month: '2-digit', day: '2-digit'}) + ' @ ' + new Date(item.eventTime).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true })}</p>
                 <p className={`user-event-attribute ${item.location?.length > 25 ? 'user-event-description' : ''}`}>Location: {item.location}</p>
                 <p className={`user-event-attribute ${item.organizer?.length > 25 ? 'user-event-description' : ''}`}>Organizer: {item.organizer}</p>
                 <p>Participation fee: ${item.price}</p>

@@ -3,7 +3,7 @@ import './login.css';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
-const Login = ({handleLogin, setEmail, setLoginMessage, setUserId}) => {
+const Login = ({handleLogin, setEmail, setLoginMessage, setUserId, setUsername, setToken}) => {
   const navigate = useNavigate();
   const [usernameOrEmail, setUsernameOrEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -18,16 +18,21 @@ const Login = ({handleLogin, setEmail, setLoginMessage, setUserId}) => {
         setError('Invalid email format. Please enter a valid email address.');
         return;
       }
-      const response = await axios.post('https://fh0ac22h12.execute-api.us-east-2.amazonaws.com/prod/login', {
-        usernameOrEmail,
+      const response = await axios.post('https://us-central1-compete-ce97a.cloudfunctions.net/api/login', {
+        email: usernameOrEmail,
         password,
       });
 
       
       if (response.status === 200) {
+        console.log(response)
         sessionStorage.setItem('token', response.data.token)
         sessionStorage.setItem('username', response.data.username);
+        sessionStorage.setItem('userId', response.data.userId)
+        setUsername(response.data.username)
+        setToken(response.data.token)
         setEmail(usernameOrEmail)
+        setUserId(response.data.userId)
         handleLogin()
         setLoginMessage(`Successfully logged in as ${response.data.username}!`)
         // Login successful
@@ -61,14 +66,14 @@ const Login = ({handleLogin, setEmail, setLoginMessage, setUserId}) => {
       <form className="login-form" onSubmit={handleSubmit}>
         <h2>Login</h2>
         <div className={`form-group ${error && 'error'}`}>
-          <label htmlFor="email">Email</label>
+          <label htmlFor="email">Email Address</label>
           <input
             type="text"
             id="email"
             value={usernameOrEmail}
             onChange={(e) => setUsernameOrEmail(e.target.value)} 
             required
-            placeholder='Log in using the email address signed up with'
+            placeholder='Email Address'
           />
         </div>
         <div className={`form-group ${error && 'error'}`}>
@@ -78,14 +83,15 @@ const Login = ({handleLogin, setEmail, setLoginMessage, setUserId}) => {
             id="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)} required
+            placeholder='Password'
           />
         </div>
-        {error && <p className="error-message">Login failed. Please check your email, password and try again</p>}
+        {error && <p className="error-message">Login failed. Please check your email or password and try again</p>}
         <button type="submit" className="login-button">
           Login
         </button>
         <p className="signup-link">
-          Don't have an account? <a href="http://localhost:5173/signup">Sign Up Now!</a>
+          Don't have an account? <a href="https://compete-ce97a.web.app/signup">Sign Up Now!</a>
         </p>
       </form>
     </div>

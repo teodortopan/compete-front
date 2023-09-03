@@ -11,7 +11,7 @@ const Contact = () => {
       <div className="contact-container">
         <div className="contact-method">
           <h2 className="contact-method-name">By Email</h2>
-          <p className="contact-method-description">Email us at compete.win.achieve@gmail.com with and questions or feedback and we'll respond before you know it!</p>
+          <p className="contact-method-description">Email us at compete.win.achieve@gmail.com with any questions or feedback!</p>
         </div>
         <div className="contact-method">
           <h2 className="contact-method-name">By Phone</h2>

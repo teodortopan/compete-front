@@ -3,14 +3,15 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import './creator.css';
 
-const Creator = ({username, user_id}) => {
+const Creator = ({ userId, setReviewPopup }) => {
+  const username = sessionStorage.getItem('username')
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [organizer, setOrganizer] = useState(username);
   const [location, setLocation] = useState('');
   const [time, setTime] = useState('');
-  const [images, setImages] = useState('');
   const [date, setDate] = useState('');
+  const [images, setImages] = useState('')
   const [categories, setCategories] = useState([]);
   const [price, setPrice] = useState('');
   const [error, setError] = useState('');
@@ -24,46 +25,40 @@ const Creator = ({username, user_id}) => {
     setError('');
 
     try {
-      const response = await axios.post('https://fh0ac22h12.execute-api.us-east-2.amazonaws.com/prod/post_competitions', {
-        user_id,
+      const eventTime = new Date(`${date}T${time}`);
+      const response = await axios.post('https://us-central1-compete-ce97a.cloudfunctions.net/api/post_competitions', {
+        userId,
         title,
         description,
         organizer,
         location,
-        date,
-        time,
+        eventTime,
         images,
         categories,
         price,
       });
-      setTitle('');
-      setDescription('');
-      setOrganizer('');
-      setLocation('');
-      setTime('');
-      setImages('');
-      setDate('');
-      setCategories([]);
-      setPrice('');
+      if(response.status === 200) {
+        setReviewPopup(true)
+        setTitle('');
+        setDescription('');
+        setOrganizer('');
+        setLocation('');
+        setTime('');
+        setDate('');
+        setImages('');
+        setCategories([]);
+        setPrice('');
+        navigate('/home');
+      }
 
-      navigate('/home');
-
-      window.location.reload();
     } catch (error) {
-      console.error('Error creating event:', error.response.data);
-      setError(error.response.data.error);
+      console.error('Error creating event:', error);
+      setError(error.response);
     }
   };
 
   const handleCategoryChange = (e) => {
-    const { value, checked } = e.target;
-    if (checked) {
-      setCategories((prevCategories) => [...prevCategories, value]);
-    } else {
-      setCategories((prevCategories) =>
-        prevCategories.filter((category) => category !== value)
-      );
-    }
+    setCategories(e.target.value)
   };
 
   const handleEventCreation = () => {
@@ -71,8 +66,8 @@ const Creator = ({username, user_id}) => {
       title !== '' &&
       organizer !== '' &&
       location !== '' &&
-      date !== '' &&
       time !== '' &&
+      date !== '' &&
       categories.length > 0 &&
       price !== ''
     ) {
@@ -134,17 +129,6 @@ const Creator = ({username, user_id}) => {
           ></textarea>
         </div>
         <div className={`form-group ${error ? 'error' : ''}`}>
-          <label htmlFor="organizer">Organizer</label>
-          <input
-            type="text"
-            id="organizer"
-            value={organizer}
-            onChange={(e) => setOrganizer(e.target.value)}
-            disabled
-            placeholder={username}
-          />
-        </div>
-        <div className={`form-group ${error ? 'error' : ''}`}>
           <label htmlFor="location">Location</label>
           <input
             type="text"
@@ -156,23 +140,22 @@ const Creator = ({username, user_id}) => {
           />
         </div>
         <div className={`form-group ${error ? 'error' : ''}`}>
-          <label htmlFor="date">Date</label>
+          <label htmlFor="eventTime">Event Time</label>
           <input
-            type="date"
-            id="date"
-            value={date}
-            onChange={(e) => setDate(e.target.value)}
-            min={new Date().toISOString().split('T')[0]}
+            type="time"
+            id="eventTime"
+            value={time}
+            onChange={(e) => setTime(e.target.value)}
             required
           />
         </div>
         <div className={`form-group ${error ? 'error' : ''}`}>
-          <label htmlFor="time">Time</label>
+          <label htmlFor="eventDate">Event Date</label>
           <input
-            type="time"
-            id="time"
-            value={time}
-            onChange={(e) => setTime(e.target.value)}
+            type="date"
+            id="eventDate"
+            value={date}
+            onChange={(e) => setDate(e.target.value)}
             required
           />
         </div>
@@ -187,134 +170,26 @@ const Creator = ({username, user_id}) => {
         </div>
         <div className={`form-group ${error ? 'error' : ''}`}>
           <label>Category</label>
-          <div className="creator-category-container">
-          <label>
-              <input
-                type="checkbox"
-                value="Mathematics"
-                checked={categories.includes('Mathematics')}
-                onChange={handleCategoryChange}
-              />
-              Mathematics
-            </label>
-            <label>
-              <input
-                type="checkbox"
-                value="Chemistry"
-                checked={categories.includes('Chemistry')}
-                onChange={handleCategoryChange}
-              />
-              Chemistry
-            </label>
-            <label>
-              <input
-                type="checkbox"
-                value="Physics"
-                checked={categories.includes('Physics')}
-                onChange={handleCategoryChange}
-              />
-              Physics
-            </label>
-            <label>
-              <input
-                type="checkbox"
-                value="Biology"
-                checked={categories.includes('Biology')}
-                onChange={handleCategoryChange}
-              />
-              Biology
-            </label>
-            <label>
-              <input
-                type="checkbox"
-                value="Computer Science"
-                checked={categories.includes('Computer Science')}
-                onChange={handleCategoryChange}
-              />
-              Computer Science
-            </label>
-            <label>
-              <input
-                type="checkbox"
-                value="Business"
-                checked={categories.includes('Business')}
-                onChange={handleCategoryChange}
-              />
-              Business
-            </label>
-            <label>
-              <input
-                type="checkbox"
-                value="Athletics"
-                checked={categories.includes('Athletics')}
-                onChange={handleCategoryChange}
-              />
-              Athletics
-            </label>
-            <label>
-              <input
-                type="checkbox"
-                value="Visual/Performing Arts"
-                checked={categories.includes('Visual/Performing Arts')}
-                onChange={handleCategoryChange}
-              />
-              Visual/Performing Arts
-            </label>
-            <label>
-              <input
-                type="checkbox"
-                value="Debate"
-                checked={categories.includes('Debate')}
-                onChange={handleCategoryChange}
-              />
-              Debate
-            </label>
-            <label>
-              <input
-                type="checkbox"
-                value="Engineering"
-                checked={categories.includes('Engineering')}
-                onChange={handleCategoryChange}
-              />
-              Engineering
-            </label>
-            <label>
-              <input
-                type="checkbox"
-                value="Public/Legal Policy"
-                checked={categories.includes('Public/Legal Policy')}
-                onChange={handleCategoryChange}
-              />
-              Public/Legal Policy
-            </label>
-            <label>
-              <input
-                type="checkbox"
-                value="History"
-                checked={categories.includes('History')}
-                onChange={handleCategoryChange}
-              />
-              History
-            </label>
-            <label>
-              <input
-                type="checkbox"
-                value="Geography"
-                checked={categories.includes('Geography')}
-                onChange={handleCategoryChange}
-              />
-              Geography
-            </label>
-            <label>
-              <input
-                type="checkbox"
-                value="Trivia"
-                checked={categories.includes('Trivia')}
-                onChange={handleCategoryChange}
-              />
-              Trivia
-            </label>
-          </div>
+          <select
+            value={categories}
+            onChange={handleCategoryChange}
+            className="form-control">
+            <option value="">Select a category</option>
+            <option value="Mathematics">Mathematics</option>
+            <option value="Chemistry">Chemistry</option>
+            <option value="Physics">Physics</option>
+            <option value="Biology">Biology</option>
+            <option value="Computer Science">Computer Science</option>
+            <option value="Business">Business</option>
+            <option value="Athletics">Athletics</option>
+            <option value="Visual/Performing Arts">Visual/Performing Arts</option>
+            <option value="Debate">Debate</option>
+            <option value="Engineering">Engineering</option>
+            <option value="Public/Legal Policy">Public/Legal Policy</option>
+            <option value="History">History</option>
+            <option value="Geography">Geography</option>
+            <option value="Trivia">Trivia</option>
+          </select>
         </div>
         <div className={`form-group ${error ? 'error' : ''}`}>
           <label htmlFor="price">Participation Fee</label>

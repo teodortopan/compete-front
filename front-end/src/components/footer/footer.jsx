@@ -15,8 +15,8 @@ const Footer = ({userData, userEventData, eventData}) => {
     try {
       setNewsletterEmail('')
       e.preventDefault()
-      const response = await axios.post('http://localhost:3000/newsletter', {
-        passedEmail: newsletterEmail
+      const response = await axios.post('https://us-central1-compete-ce97a.cloudfunctions.net/api/subscribe-newsletter', {
+        email: newsletterEmail
       })
     } catch (error) {
       console.error('Error signing up for the newsletter:', error);
@@ -49,7 +49,7 @@ const Footer = ({userData, userEventData, eventData}) => {
           <form className="newsletter-form" onSubmit={handleNewsletterSubmit}>
             <input
               type="email"
-              placeholder="Subscribe to our newsletter"
+              placeholder="Subscribe to newsletter"
               className='newsletter-input'
               value={newsletterEmail}
               onChange={(e) => setNewsletterEmail(e.target.value)}

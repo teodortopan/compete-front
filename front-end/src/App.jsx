@@ -16,6 +16,7 @@ import UserEvents from './components/userEvents/userEvents';
 import Landing from './components/landing/landing';
 
 const App = () => {
+  const [token, setToken] = useState('')
   const [data, setData] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState('');
   const [searchText, setSearchText] = useState('');
@@ -28,6 +29,7 @@ const App = () => {
   const [name, setName] = useState('')
   const [phoneNumber, setPhoneNumber] = useState('')
   const [successMessage, setSuccessMessage] = useState('');
+  const [unregisterMessage, setUnregisterMessage] = useState('');
   const [deleteMessage, setDeleteMessage] = useState('');
   const [loginMessage, setLoginMessage] = useState('')
   const [reviewPopup, setReviewPopup] = useState(false)
@@ -35,10 +37,12 @@ const App = () => {
   const [userData, setUserData] = useState(null);
   const [userEventData, setUserEventData] = useState(null)
   const [eventData, setEventData] = useState([]);
-  
   useEffect(() => {
+    if(!localStorage.getItem('reviewerStatus')) {
+      localStorage.setItem('reviewerStatus', false)
+    }
     // Check if the user is authenticated
-    const token = sessionStorage.getItem('token'); // Get the session token or JWT from local storage
+    const storedToken = sessionStorage.getItem('token'); // Get the session token or JWT from local storage
     const storedUsername = sessionStorage.getItem('username');
     const storedTitle = localStorage.getItem('eventTitle')
     const storedId = localStorage.getItem('eventId')
@@ -46,9 +50,10 @@ const App = () => {
     const storedPhoneNumber = sessionStorage.getItem('phoneNumber')
     const storedName = sessionStorage.getItem('name')
     const storedReviewerStatus = localStorage.getItem('reviewerStatus')
-    if (token && storedUsername && storedUserId && storedName && storedPhoneNumber) {
+    if (storedToken && storedUsername && storedUserId && storedPhoneNumber) {
       axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
       // User is authenticated
+      setToken(storedToken)
       setReviewerStatus(storedReviewerStatus)
       setIsAuthenticated(true);
       setUsername(storedUsername);
@@ -67,7 +72,8 @@ const App = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get('https://fh0ac22h12.execute-api.us-east-2.amazonaws.com/prod/competitions');
+        const response = await axios.get('https://us-central1-compete-ce97a.cloudfunctions.net/api/competitions', {
+        });
         setData(response.data);
       } catch (error) {
         console.error('Error fetching data:', error);
@@ -85,7 +91,7 @@ const App = () => {
 
   const getUsername = async () => {
     try {
-      const response = await axios.get('https://fh0ac22h12.execute-api.us-east-2.amazonaws.com/prod/username', { params: { email } });
+      const response = await axios.get('https://us-central1-compete-ce97a.cloudfunctions.net/api/username', { params: { email } });
       setUsername(response.data[0]?.username || 'Username not found');
     } catch (error) {
       console.error('Error fetching username:', error);
@@ -110,12 +116,12 @@ const filteredData = selectedCategory
       (item) =>
         item.category?.includes(selectedCategory) &&
         item.title.toLowerCase().includes(searchText?.toLowerCase() || '') &&
-        new Date(item.date) >= today // Compare the item's date with today
+        new Date(item.eventTime) >= today // Compare the item's date with today
     )
   : data.filter(
       (item) =>
         item.title?.toLowerCase().includes(searchText?.toLowerCase() || '') &&
-        new Date(item.date) >= today // Compare the item's date with today
+        new Date(item.eventTime) >= today // Compare the item's date with today
     );
 
   const handleEventId = (id) => {
@@ -141,18 +147,18 @@ const filteredData = selectedCategory
     />
       <Routes>
         <Route exact path='/' element={<Landing />} />
-        <Route path='/home' element={<Home filterDataByCategory={filterDataByCategory} filteredData={filteredData} onEventId={handleEventId} onEventTitle={handleEventTitle} successMessage={successMessage} deleteMessage={deleteMessage} loginMessage={loginMessage} setLoginMessage={setLoginMessage} reviewPopup={reviewPopup} setReviewPopup={setReviewPopup} name={name} eventId={eventId} userId={userId} reviewerStatus={reviewerStatus} selectedCategory={selectedCategory}/>} />
+        <Route path='/home' element={<Home filterDataByCategory={filterDataByCategory} filteredData={filteredData} onEventId={handleEventId} onEventTitle={handleEventTitle} successMessage={successMessage} deleteMessage={deleteMessage} loginMessage={loginMessage} setLoginMessage={setLoginMessage} reviewPopup={reviewPopup} setReviewPopup={setReviewPopup} name={name} eventId={eventId} userId={userId} reviewerStatus={reviewerStatus} selectedCategory={selectedCategory} unregisterMessage={unregisterMessage}/>} />
         <Route path='/services' element={<Services />} />
         <Route path='/about' element={<About />} />
         <Route path='/contact' element={<Contact />} />
         <Route path='/signup' element={<SignUp />} />
-        <Route path='/creator' element={<Creator username={username} user_id={userId}/>} />
+        <Route path='/creator' element={<Creator username={username} userId={userId} setReviewPopup={(setReviewPopup)}/>} />
         <Route path='/user/:username'element={<Profile username={username} setUserId={setUserId} setName={setName} setPhoneNumber={setPhoneNumber} setLoginMessage={setLoginMessage} loginMessage={loginMessage} userData={userData} setUserData={setUserData}/>} />
         <Route path='/user/:username/:id/events'element={<UserEvents name={name} userId={userId} onEventId={handleEventId} onEventTitle={handleEventTitle} userEventData={userEventData} setUserEventData={setUserEventData}/>} />
-        <Route path='/event/:competition/:id'element={<Event eventId={eventId} eventTitle = {eventTitle} userId={userId} name={name} phoneNumber={phoneNumber} setDeleteMessage={setDeleteMessage} setSuccessMessage={setSuccessMessage} setReviewPopup={setReviewPopup} reviewerStatus={reviewerStatus} username={username} eventData={eventData} setEventData={setEventData} data={data} setData={setData}/>} />
+        <Route path='/event/:competition/:id'element={<Event eventId={eventId} eventTitle = {eventTitle} user_id={userId} name={name} phoneNumber={phoneNumber} setDeleteMessage={setDeleteMessage} setSuccessMessage={setSuccessMessage} setReviewPopup={setReviewPopup} reviewerStatus={reviewerStatus} username={username} eventData={eventData} setEventData={setEventData} data={data} setData={setData} setUnregisterMessage={setUnregisterMessage}/>} />
         <Route
           path='/login'
-          element={<Login handleLogin={() => setIsAuthenticated(true)} setEmail={handleEmailChange} getUsername={getUsername} setLoginMessage={setLoginMessage}/>}
+          element={<Login handleLogin={() => setIsAuthenticated(true)} setEmail={handleEmailChange} getUsername={getUsername} setLoginMessage={setLoginMessage} setUsername={setUsername} setToken={setToken} setUserId={setUserId}/>}
         />
       </Routes>
       <Footer userData={userData} userEventData={userEventData} eventData={eventData}/>

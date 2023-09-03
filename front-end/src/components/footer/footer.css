@@ -1,118 +1,231 @@
-.footer {
-  grid-column: 1 / span 2;
-  background-color: #212529;
-  padding: 20px;
-  margin-top: 50px;
-}
-
-.copyright-company-text {
-  color: white;
-}
-
-.footer-content {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.footer-left {
-  display: flex;
-  align-items: center;
-}
-
-.website-name {
-  font-size: 24px;
-  margin-right: 20px;
-  color: white;
-  text-decoration: none;
-}
-
-.footer-links {
-  list-style-type: none;
-  padding: 0;
-  margin: 0;
-  display: flex;
-}
-
-.footer-links li {
-  margin-right: 10px;
-}
-
-.footer-links li a {
-  color: white;
-  text-decoration: none;
-}
-
-.footer-right {
-  display: flex;
-  align-items: center;
-}
-
-.newsletter-form {
-  display: flex;
-}
-
-.newsletter-form input {
-  padding: 5px;
-  border-radius: 3px;
-  border: 1px solid #ccc;
-  margin-right: 10px;
-  width: 220px; /* Adjust the width as needed */
-}
-
-.newsletter-form button {
-  padding: 5px 10px;
-  border: none;
-  border-radius: 3px;
-  background-color: #007bff;
-  color: #fff;
-  cursor: pointer;
-}
-
-.newsletter-form button:hover {
-  background-color: #0056b3;
-}
-
-.newsletter-input {
-  width: 215px;
-}
-
-/* Animation styles */
-@keyframes fadeInUp {
-  from {
-    transform: translate(-50%, -40%);
-    opacity: 0;
+@media screen and (max-width: 600px) {
+  .footer {
+    background-color: #212529;
+    padding: 20px;
+    margin-top: auto;
   }
-  to {
-    transform: translate(-50%, -50%);
+
+  .copyright-company-text {
+    color: white;
+  }
+
+  .footer-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .website-name {
+    font-size: 24px;
+    margin-bottom: 20px;
+    color: white;
+    text-decoration: none;
+  }
+
+  .footer-links {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+  }
+
+  .footer-links li {
+    margin-right: 10px;
+  }
+
+  .footer-links li a {
+    color: white;
+    text-decoration: none;
+  }
+
+  .newsletter-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .newsletter-form input {
+    padding: 5px;
+    border-radius: 3px;
+    border: 1px solid #ccc;
+    margin-bottom: 10px;
+    width: 100%;
+    max-width: 220px;
+    box-sizing: border-box;
+  }
+
+  .newsletter-form button {
+    padding: 5px 10px;
+    border: none;
+    border-radius: 3px;
+    background-color: #007bff;
+    color: #fff;
+    cursor: pointer;
+  }
+
+  .newsletter-form button:hover {
+    background-color: #0056b3;
+  }
+
+  /* Animation styles */
+  @keyframes fadeInUp {
+    from {
+      transform: translate(0, -40%);
+      opacity: 0;
+    }
+    to {
+      transform: translate(0, 0);
+      opacity: 1;
+    }
+  }
+
+  .newsletter-wrapper {
+    position: relative;
+    display: inline-block;
+    width: 100px;
+  }
+
+  .newsletter-popup {
+    width: 100%; /* Full width */
+    position: absolute;
+    bottom: 100%; /* Positioned above the wrapper */
+    left: 0;
+    background-color: #fff;
+    color: #333;
+    border: 1px solid #ccc;
+    padding: 5px;
+    border-radius: 3px;
+    font-size: 12px;
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity 0.3s;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  .newsletter-popup.active {
+    visibility: visible;
     opacity: 1;
   }
 }
-.newsletter-wrapper {
-  position: relative; /* Set the wrapper as the positioning reference */
-  display: inline-block; /* Keep the button and tooltip in line */
-  width: 100px;
-}
+@media screen and (min-width: 601px) {
+  .footer {
+    grid-column: 1 / span 2;
+    background-color: #212529;
+    padding: 20px;
+    margin-top: 75px;
+  }
 
-.newsletter-popup {
-  width: 300px; /* Adjust the width as needed */
-  max-width: 80%;
-  position: absolute;
-  bottom: 130%;
-  left: 40%;
-  transform: translateX(-50%);
-  background-color: #fff; /* Set background color */
-  color: #333; /* Set text color */
-  border: 1px solid #ccc; /* Add border for appearance */
-  padding: 5px;
-  border-radius: 3px;
-  font-size: 12px;
-  visibility: visible;
-  opacity: 1;
-  transition: opacity 0.3s;
-  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
-}
+  .copyright-company-text {
+    color: white;
+  }
 
-.newsletter-popup.active {
-  transition: opacity 0.3s;
+  .footer-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .footer-left {
+    display: flex;
+    align-items: center;
+  }
+
+  .website-name {
+    font-size: 24px;
+    margin-right: 20px;
+    color: white;
+    text-decoration: none;
+  }
+
+  .footer-links {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+  }
+
+  .footer-links li {
+    margin-right: 10px;
+  }
+
+  .footer-links li a {
+    color: white;
+    text-decoration: none;
+  }
+
+  .footer-right {
+    display: flex;
+    align-items: center;
+  }
+
+  .newsletter-form {
+    display: flex;
+  }
+
+  .newsletter-form input {
+    padding: 5px;
+    border-radius: 3px;
+    border: 1px solid #ccc;
+    margin-right: 10px;
+    width: 220px; /* Adjust the width as needed */
+  }
+
+  .newsletter-form button {
+    padding: 5px 10px;
+    border: none;
+    border-radius: 3px;
+    background-color: #007bff;
+    color: #fff;
+    cursor: pointer;
+  }
+
+  .newsletter-form button:hover {
+    background-color: #0056b3;
+  }
+
+  .newsletter-input {
+    width: 215px;
+  }
+
+  /* Animation styles */
+  @keyframes fadeInUp {
+    from {
+      transform: translate(-50%, -40%);
+      opacity: 0;
+    }
+    to {
+      transform: translate(-50%, -50%);
+      opacity: 1;
+    }
+  }
+  .newsletter-wrapper {
+    position: relative; /* Set the wrapper as the positioning reference */
+    display: inline-block; /* Keep the button and tooltip in line */
+    width: 100px;
+  }
+
+  .newsletter-popup {
+    width: 300px; /* Adjust the width as needed */
+    max-width: 80%;
+    position: absolute;
+    bottom: 130%;
+    left: 40%;
+    transform: translateX(-50%);
+    background-color: #fff; /* Set background color */
+    color: #333; /* Set text color */
+    border: 1px solid #ccc; /* Add border for appearance */
+    padding: 5px;
+    border-radius: 3px;
+    font-size: 12px;
+    visibility: visible;
+    opacity: 1;
+    transition: opacity 0.3s;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  .newsletter-popup.active {
+    transition: opacity 0.3s;
+  }
 }

@@ -29,11 +29,6 @@ const Navigation = ({ filterDataByCategory, setSearchText, isAuthenticated, user
       <Navbar.Toggle aria-controls="basic-navbar-nav" />
       <Navbar.Collapse id="basic-navbar-nav">
         <Nav className="mr-auto">
-          {/* <Nav.Item>
-            <Nav.Link as={Link} to="/services" className="nav-link">
-              Services
-            </Nav.Link>
-          </Nav.Item> */}
           <Nav.Item>
             <Nav.Link as={Link} to="/about" className="nav-link">
               About
@@ -45,36 +40,36 @@ const Navigation = ({ filterDataByCategory, setSearchText, isAuthenticated, user
             </Nav.Link>
           </Nav.Item>
         </Nav>
-        <Form inline="true" style={{marginLeft: '30px', minWidth: '200px'}}>
+        <Form inline="true" style={{ minWidth: '200px', marginRight: '20px' }}>
           <FormControl
             type="text"
-            placeholder="Search"
+            placeholder="Search for events"
             className="mr-sm-2"
             onChange={handleSearchChange}
             onKeyDown={handleKeyDown}
           />
         </Form>
-        <Nav style={{ marginLeft: '25rem', display: 'flex', alignItems: 'center'}}>
+        <Nav className="ml-auto">
           {isAuthenticated ? (
             <>
-            <Nav.Item style={{marginRight: '30px'}}>
-              <Nav.Link as={Link} to={`/user/${username}/${userId}/events`} className="nav-link">
-                Created & Registered Events
-              </Nav.Link>
-            </Nav.Item>
-            <Nav.Item style={{marginRight: '30px'}}>
-              <Nav.Link as={Link} to="/creator" className="nav-link">
-                Create Event
-              </Nav.Link>
-            </Nav.Item>
-            <Nav.Item style={{marginRight: '30px'}}>
-              <Nav.Link as={Link} to={`/user/${username}`} className="nav-link">
-                Logged in as: {username}
-              </Nav.Link>
-            </Nav.Item>
+              <Nav.Item>
+                <Nav.Link as={Link} to={`/user/${username}/${userId}/events`} className="nav-link">
+                  Created & Registered Events
+                </Nav.Link>
+              </Nav.Item>
+              <Nav.Item>
+                <Nav.Link as={Link} to="/creator" className="nav-link">
+                  Create Event
+                </Nav.Link>
+              </Nav.Item>
+              <Nav.Item>
+                <Nav.Link as={Link} to={`/user/${username}`} className="nav-link">
+                  Logged in as: {username}
+                </Nav.Link>
+              </Nav.Item>
             </>
           ) : (
-            <Nav.Item style={{flexWrap: 'wrap', paddingBottom: '13px', paddingTop: '13px'}}>
+            <Nav.Item style={{ paddingBottom: '13px', paddingTop: '13px' }}>
               <Nav.Link as={Link} to="/login" className="nav-link">
                 Log In
               </Nav.Link>

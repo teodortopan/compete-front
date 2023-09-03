@@ -11,12 +11,12 @@ const Profile = ({ username, setLoginMessage, loginMessage, setUserId, userData,
   useEffect(() => {
     const getUserData = async () => {
       try {
-        const response = await axios.get(`https://fh0ac22h12.execute-api.us-east-2.amazonaws.com/prod/profile/${username}`);
-        setUserData(response.data);
-        setUserId(response.data.user_id)
-        sessionStorage.setItem('userId', response.data.user_id)
-        sessionStorage.setItem('name', response.data.first_name + ' ' + response.data.last_name)
-        sessionStorage.setItem('phoneNumber', response.data.phone_number)
+        const response = await axios.get(`https://us-central1-compete-ce97a.cloudfunctions.net/api/profile/${username}`);
+        setUserData(response.data._document.data.value.mapValue.fields);
+        setUserId(response.data._document.data.value.mapValue.fields.userId.stringValue)
+        sessionStorage.setItem('userId', response.data._document.data.value.mapValue.fields.userId.stringValue)
+        sessionStorage.setItem('name', response.data._document.data.value.mapValue.fields.firstName.stringValue + ' ' + response.data._document.data.value.mapValue.fields.lastName.stringValue)
+        sessionStorage.setItem('phoneNumber', response.data._document.data.value.mapValue.fields.phoneNumber.stringValue)
       } catch (error) {
         console.error('Error fetching user data:', error);
       }
@@ -25,7 +25,7 @@ const Profile = ({ username, setLoginMessage, loginMessage, setUserId, userData,
   }, [username]);
 
   if (userData === null) {
-    return <div></div>;
+    return <div>Loading...</div>;
   }
 
   const logOut = () => {
@@ -94,16 +94,16 @@ const Profile = ({ username, setLoginMessage, loginMessage, setUserId, userData,
         </div>
       </div>
       <p className="profile-name">
-        <strong>Name:</strong> {userData.first_name} {userData.last_name}
+        <strong>Name:</strong> {userData.firstName.stringValue} {userData.lastName.stringValue}
       </p>
       <p className="profile-username">
-        <strong>Username:</strong> {userData.username}
+        <strong>Username:</strong> {userData.username.stringValue}
       </p>
       <p className="profile-email">
-        <strong>Email:</strong> {userData.email}
+        <strong>Email:</strong> {userData.email.stringValue}
       </p>
       <p className="profile-phone-number">
-        <strong>Phone Number:</strong> {userData.phone_number.substring(0,3) + '-' + userData.phone_number.substring(3,6) + '-' + userData.phone_number.substring(6,10)}
+        <strong>Phone Number:</strong> {userData.phoneNumber?.stringValue.substring(0,3) + '-' + userData.phoneNumber?.stringValue.substring(3,6) + '-' + userData.phoneNumber?.stringValue.substring(6,10)}
       </p>
       <button className="profile-button" onClick={logOut}>
         Log Out

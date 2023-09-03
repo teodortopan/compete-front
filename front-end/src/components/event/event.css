@@ -1,175 +1,365 @@
-.individual-container {
-  background-color: #f2f2f2;
-  padding: 20px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  margin-top: 20px 0; /* Add this line to center the container */
-}
-
-.individual-left {
-  background-color: #ffffff;
-  padding: 40px;
-  border-radius: 5px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  width: 40%;
-  border: 2px solid #ccc;
-}
-
-.individual-title {
-  font-size: 24px;
-  margin-bottom: 20px;
-  text-align: center;
-  color: #333333;
-}
-
-.individual-image {
-  width: 100%;
-  margin-bottom: 20px;
-}
-
-.individual-description,
-.individual-organizer,
-.individual-location,
-.individual-time,
-.individual-date,
-.individual-price {
-  margin-bottom: 20px;
-  border-bottom: 1px solid #ccc;
-  padding-bottom: 10px;
-}
-
-.individual-description-value,
-.individual-organizer-value,
-.individual-location-value,
-.individual-time-value,
-.individual-date-value,
-.individual-price-value {
-  width: 100%;
-  padding: 8px;
-  border: none;
-  font-size: 14px;
-  color: #333333;
-  transition: border-color 0.3s ease, transform 0.3s ease;
-}
-
-.individual-price-value {
-  color: #333333;
-}
-
-.individual-button {
-  width: 100%;
-  padding: 10px;
-  background-color: #3498db;
-  color: #ffffff;
-  border: none;
-  border-radius: 3px;
-  font-size: 16px;
-  cursor: pointer;
-}
-
-.individual-delete-button {
-  width: 100%;
-  padding: 10px;
-  background-color: #d0342c;
-  color: #ffffff;
-  border: none;
-  border-radius: 3px;
-  font-size: 16px;
-  cursor: pointer;
-}
-
-.individual-button:hover {
-  background-color: #555555;
-  transition: 0.2s;
-}
-
-.individual-delete-button:hover {
-  background-color: #95140d;
-  transition: 0.2s;
-}
-
-.popup {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.6);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 9999;
-}
-
-.popup-content {
-  background-color: #ffffff;
-  padding: 20px;
-  border-radius: 5px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-  max-width: 400px;
-  width: 100%;
-  text-align: center;
-}
-
-.popup-title {
-  font-size: 24px;
-  margin-bottom: 20px;
-  color: #333333;
-}
-
-.popup-message {
-  margin-bottom: 20px;
-  color: #333333;
-}
-
-.popup-buttons {
-  display: flex;
-  justify-content: center;
-  gap: 150px;
-}
-
-.popup-button {
-  margin: 0 10px;
-  padding: 10px 20px;
-  background-color: #333333;
-  color: #ffffff;
-  border: none;
-  border-radius: 3px;
-  font-size: 16px;
-  cursor: pointer;
-}
-
-.popup-button:hover {
-  background-color: #555555;
-  transition: 0.2s;
-}
-
-.error-registration-message {
-  color: #f44336; /* Red background color */
-  padding: 10px;
-  font-size: 25px;
-  border-radius: 4px;
-  margin: 10px 0;
-  animation: shake 0.3s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
-}
-
-/* Define the shake animation */
-@keyframes shake {
-  10%, 90% {
-    transform: translate3d(-1px, 0, 0);
+@media screen and (max-width: 600px) { 
+  .individual-left {
+    width: 100%;
+    padding: 20px;
   }
 
-  20%, 80% {
-    transform: translate3d(2px, 0, 0);
+  .individual-title {
+    font-size: 20px;
   }
 
-  30%, 50%, 70% {
-    transform: translate3d(-4px, 0, 0);
+  .individual-image {
+    width: 100%;
+    margin-bottom: 10px;
   }
 
-  40%, 60% {
-    transform: translate3d(4px, 0, 0);
+  .individual-description,
+  .individual-organizer,
+  .individual-location,
+  .individual-time,
+  .individual-date,
+  .individual-price {
+    margin-bottom: 10px;
+    border-bottom: 1px solid #ccc;
+    padding-bottom: 5px;
+  }
+
+  .individual-participant-count,
+  .individual-description-value,
+  .individual-organizer-value,
+  .individual-location-value,
+  .individual-time-value,
+  .individual-date-value,
+  .individual-price-value {
+    width: 100%;
+    padding: 5px;
+    font-size: 12px;
+  }
+  .individual-button {
+    width: 100%;
+    padding: 10px;
+    background-color: #3498db;
+    color: #ffffff;
+    border: none;
+    border-radius: 3px;
+    font-size: 16px;
+    cursor: pointer;
+  }
+
+  .individual-unparticipate-button {
+    width: 100%;
+    padding: 10px;
+    background-color: #dad71b;
+    color: #ffffff;
+    border: none;
+    border-radius: 3px;
+    font-size: 16px;
+    cursor: pointer;
+  }
+
+  .individual-unparticipate-button:hover {
+    background-color: #868410;
+    transition: 0.2s;
+  }
+
+  .individual-delete-button {
+    width: 100%;
+    padding: 10px;
+    background-color: #d0342c;
+    color: #ffffff;
+    border: none;
+    border-radius: 3px;
+    font-size: 16px;
+    cursor: pointer;
+  }
+
+  .individual-button:hover {
+    background-color: #555555;
+    transition: 0.2s;
+  }
+
+  .individual-delete-button:hover {
+    background-color: #95140d;
+    transition: 0.2s;
+  }
+
+  .popup {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+  }
+
+  .popup-content {
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    max-width: 400px;
+    width: 100%;
+    text-align: center;
+  }
+
+  .popup-title {
+    font-size: 24px;
+    margin-bottom: 20px;
+    color: #333333;
+  }
+
+  .popup-message {
+    margin-bottom: 20px;
+    color: #333333;
+  }
+
+  .popup-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 150px;
+  }
+
+  .popup-button {
+    margin: 0 10px;
+    padding: 10px 20px;
+    background-color: #333333;
+    color: #ffffff;
+    border: none;
+    border-radius: 3px;
+    font-size: 16px;
+    cursor: pointer;
+  }
+
+  .popup-button:hover {
+    background-color: #555555;
+    transition: 0.2s;
+  }
+
+  .error-registration-message {
+    color: #f44336; /* Red background color */
+    padding: 10px;
+    font-size: 25px;
+    border-radius: 4px;
+    margin: 10px 0;
+    animation: shake 0.3s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+  }
+
+  /* Define the shake animation */
+  @keyframes shake {
+    10%, 90% {
+      transform: translate3d(-1px, 0, 0);
+    }
+
+    20%, 80% {
+      transform: translate3d(2px, 0, 0);
+    }
+
+    30%, 50%, 70% {
+      transform: translate3d(-4px, 0, 0);
+    }
+
+    40%, 60% {
+      transform: translate3d(4px, 0, 0);
+    }
+  }
+}
+
+@media screen and (min-width: 601px) {
+  .individual-container {
+    background-color: #f2f2f2;
+    padding: 20px;
+    display: flex;
+    margin-bottom: 79px;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    margin-top: 20px 0; /* Add this line to center the container */
+  }
+
+  .individual-left {
+    background-color: #ffffff;
+    padding: 40px;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    width: 40%;
+    border: 2px solid #ccc;
+  }
+
+  .individual-title {
+    font-size: 24px;
+    margin-bottom: 20px;
+    text-align: center;
+    color: #333333;
+  }
+
+  .individual-image {
+    width: 100%;
+    margin-bottom: 20px;
+  }
+
+  .individual-description,
+  .individual-organizer,
+  .individual-location,
+  .individual-time,
+  .individual-date,
+  .individual-price {
+    margin-bottom: 20px;
+    border-bottom: 1px solid #ccc;
+    padding-bottom: 10px;
+  }
+
+  .individual-participant-count,
+  .individual-description-value,
+  .individual-organizer-value,
+  .individual-location-value,
+  .individual-time-value,
+  .individual-date-value,
+  .individual-price-value {
+    width: 100%;
+    padding: 8px;
+    border: none;
+    font-size: 14px;
+    color: #333333;
+    transition: border-color 0.3s ease, transform 0.3s ease;
+  }
+
+  .individual-price-value {
+    color: #333333;
+  }
+
+  .individual-button {
+    width: 100%;
+    padding: 10px;
+    background-color: #3498db;
+    color: #ffffff;
+    border: none;
+    border-radius: 3px;
+    font-size: 16px;
+    cursor: pointer;
+  }
+
+  .individual-unparticipate-button {
+    width: 100%;
+    padding: 10px;
+    background-color: #dad71b;
+    color: #ffffff;
+    border: none;
+    border-radius: 3px;
+    font-size: 16px;
+    cursor: pointer;
+  }
+
+  .individual-unparticipate-button:hover {
+    background-color: #868410;
+    transition: 0.2s;
+  }
+
+  .individual-delete-button {
+    width: 100%;
+    padding: 10px;
+    background-color: #d0342c;
+    color: #ffffff;
+    border: none;
+    border-radius: 3px;
+    font-size: 16px;
+    cursor: pointer;
+  }
+
+  .individual-button:hover {
+    background-color: #555555;
+    transition: 0.2s;
+  }
+
+  .individual-delete-button:hover {
+    background-color: #95140d;
+    transition: 0.2s;
+  }
+
+  .popup {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+  }
+
+  .popup-content {
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    max-width: 400px;
+    width: 100%;
+    text-align: center;
+  }
+
+  .popup-title {
+    font-size: 24px;
+    margin-bottom: 20px;
+    color: #333333;
+  }
+
+  .popup-message {
+    margin-bottom: 20px;
+    color: #333333;
+  }
+
+  .popup-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 150px;
+  }
+
+  .popup-button {
+    margin: 0 10px;
+    padding: 10px 20px;
+    background-color: #333333;
+    color: #ffffff;
+    border: none;
+    border-radius: 3px;
+    font-size: 16px;
+    cursor: pointer;
+  }
+
+  .popup-button:hover {
+    background-color: #555555;
+    transition: 0.2s;
+  }
+
+  .error-registration-message {
+    color: #f44336; /* Red background color */
+    padding: 10px;
+    font-size: 25px;
+    border-radius: 4px;
+    margin: 10px 0;
+    animation: shake 0.3s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+  }
+
+  /* Define the shake animation */
+  @keyframes shake {
+    10%, 90% {
+      transform: translate3d(-1px, 0, 0);
+    }
+
+    20%, 80% {
+      transform: translate3d(2px, 0, 0);
+    }
+
+    30%, 50%, 70% {
+      transform: translate3d(-4px, 0, 0);
+    }
+
+    40%, 60% {
+      transform: translate3d(4px, 0, 0);
+    }
   }
 }
